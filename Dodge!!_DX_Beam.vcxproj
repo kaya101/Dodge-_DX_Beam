@@ -115,11 +115,23 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App\Game\EffectObject.cpp" />
+    <ClCompile Include="App\Game\Graph.cpp" />
+    <ClCompile Include="App\Game\Player.cpp" />
+    <ClCompile Include="App\Game\SaveDataManager.cpp" />
     <ClCompile Include="App\Main.cpp" />
+    <ClCompile Include="App\Scenes\EditFunction.cpp" />
+    <ClCompile Include="App\Scenes\Play.cpp" />
+    <ClCompile Include="App\Scenes\SelectFiles.cpp" />
+    <ClCompile Include="App\Scenes\Title.cpp" />
     <ClCompile Include="App\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="App\Utils\BaseButton.cpp" />
+    <ClCompile Include="App\Utils\Common.cpp" />
+    <ClCompile Include="App\Utils\dx2Library.cpp" />
+    <ClCompile Include="App\Utils\IGraphTool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="App\engine\texture\box-shadow\128.png" />
@@ -312,6 +324,9 @@
     <Media Include="App\example\shot.mp3" />
     <Media Include="App\example\test.mp3" />
     <Media Include="App\example\video\river.mp4" />
+    <Media Include="Assets\bgm\Action.mp3" />
+    <Media Include="Assets\bgm\EXP.mp3" />
+    <Media Include="Assets\bgm\Monopoly.mp3" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="App\example\font\DotGothic16\DotGothic16-Regular.ttf" />
@@ -326,7 +341,23 @@
     <Xml Include="App\example\xml\test.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App\AppIncludes.h" />
+    <ClInclude Include="App\Game\EffectObject.h" />
+    <ClInclude Include="App\Game\Game.h" />
+    <ClInclude Include="App\Game\Graph.h" />
+    <ClInclude Include="App\Game\Player.h" />
+    <ClInclude Include="App\Game\SaveDataManager.h" />
+    <ClInclude Include="App\Scenes\EditFunction.h" />
+    <ClInclude Include="App\Scenes\Play.h" />
+    <ClInclude Include="App\Scenes\Scenes.h" />
+    <ClInclude Include="App\Scenes\SelectFiles.h" />
+    <ClInclude Include="App\Scenes\Title.h" />
     <ClInclude Include="App\stdafx.h" />
+    <ClInclude Include="App\Utils\BaseButton.h" />
+    <ClInclude Include="App\Utils\Common.h" />
+    <ClInclude Include="App\Utils\dx2Library.h" />
+    <ClInclude Include="App\Utils\IGraphTool.h" />
+    <ClInclude Include="App\Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App\example\obj\blacksmith.obj">

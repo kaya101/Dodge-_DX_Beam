@@ -1,98 +1,51 @@
-﻿# include <Siv3D.hpp> // Siv3D v0.6.16
+﻿// dx ビームを避けるゲーム.
+
+# include <Siv3D.hpp> // Siv3D v0.6.16
+#include "AppIncludes.h"
+
+namespace font = dx2::font;
 
 void Main()
 {
-	// 背景の色を設定する | Set the background color
-	Scene::SetBackground(ColorF{ 0.6, 0.8, 0.7 });
+	// プレイ画面の大きさを定数で設定する.
+	Window::Resize(windowWidth, windowHeight);
 
-	// 画像ファイルからテクスチャを作成する | Create a texture from an image file
-	const Texture texture{ U"example/windmill.png" };
+	// ウィンドウの枠を非表示にする.
+	Window::SetStyle(WindowStyle::Frameless);// エスケープキー（ESC）でゲームを終了できるから、右上のバツが押せなくても平気.
 
-	// 絵文字からテクスチャを作成する | Create a texture from an emoji
-	const Texture emoji{ U"🦖"_emoji };
+	// bgm を設定する.
+	for (const auto& it : dx2::music::bgm) AudioAsset::Register(it.first, Audio::Stream, it.second);
 
-	// 太文字のフォントを作成する | Create a bold font with MSDF method
-	const Font font{ FontMethod::MSDF, 48, Typeface::Bold };
+	// 効果音を設定する.
+	for (const auto& it : dx2::music::se) AudioAsset::Register(it.first, std::get<0>(it.second), std::get<1>(it.second), std::get<2>(it.second));
 
-	// テキストに含まれる絵文字のためのフォントを作成し、font に追加する | Create a font for emojis in text and add it to font as a fallback
-	const Font emojiFont{ 48, Typeface::ColorEmoji };
-	font.addFallback(emojiFont);
+	// フォントを設定する.
+	FontAsset::Register(font::FontName(font::FontKey::Title), FontMethod::MSDF, 50, U"example/font/RocknRoll/RocknRollOne-Regular.ttf");
+	FontAsset(font::FontName(font::FontKey::Title)).setBufferThickness(4);
+	FontAsset::Register(font::FontName(font::FontKey::Main), FontMethod::SDF, 30, Typeface::Bold);
+	FontAsset(font::FontName(font::FontKey::Main)).setBufferThickness(4);
 
-	// ボタンを押した回数 | Number of button presses
-	int32 count = 0;
+	App manager;
+	manager.add<Title>(State::Title);
+	manager.add<Play>(State::Play);
+	manager.add<SelectFiles>(State::SelectFiles);
+	manager.add<EditFunction>(State::EditFunction);
 
-	// チェックボックスの状態 | Checkbox state
-	bool checked = false;
+	//manager.init(State::SelectFiles, 0s);// Title シーンから始めて, 0s 後に開始.
+	manager.init(State::Title, 0s);
 
-	// プレイヤーの移動スピード | Player's movement speed
-	double speed = 200.0;
-
-	// プレイヤーの X 座標 | Player's X position
-	double playerPosX = 400;
-
-	// プレイヤーが右を向いているか | Whether player is facing right
-	bool isPlayerFacingRight = true;
+	// ゲームシーンから開始したい場合はこのコメントを外す.
+	//manager.init(State::Play, 0s);
 
 	while (System::Update())
 	{
-		// テクスチャを描く | Draw the texture
-		texture.draw(20, 20);
-
-		// テキストを描く | Draw text
-		font(U"Hello, Siv3D!🎮").draw(64, Vec2{ 20, 340 }, ColorF{ 0.2, 0.4, 0.8 });
-
-		// 指定した範囲内にテキストを描く | Draw text within a specified area
-		font(U"Siv3D (シブスリーディー) は、ゲームやアプリを楽しく簡単な C++ コードで開発できるフレームワークです。")
-			.draw(18, Rect{ 20, 430, 480, 200 }, Palette::Black);
-
-		// 長方形を描く | Draw a rectangle
-		Rect{ 540, 20, 80, 80 }.draw();
-
-		// 角丸長方形を描く | Draw a rounded rectangle
-		RoundRect{ 680, 20, 80, 200, 20 }.draw(ColorF{ 0.0, 0.4, 0.6 });
-
-		// 円を描く | Draw a circle
-		Circle{ 580, 180, 40 }.draw(Palette::Seagreen);
-
-		// 矢印を描く | Draw an arrow
-		Line{ 540, 330, 760, 260 }.drawArrow(8, SizeF{ 20, 20 }, ColorF{ 0.4 });
-
-		// 半透明の円を描く | Draw a semi-transparent circle
-		Circle{ Cursor::Pos(), 40 }.draw(ColorF{ 1.0, 0.0, 0.0, 0.5 });
-
-		// ボタン | Button
-		if (SimpleGUI::Button(U"count: {}"_fmt(count), Vec2{ 520, 370 }, 120, (checked == false)))
+		if (not manager.update())
 		{
-			// カウントを増やす | Increase the count
-			++count;
+			break;
 		}
-
-		// チェックボックス | Checkbox
-		SimpleGUI::CheckBox(checked, U"Lock \U000F033E", Vec2{ 660, 370 }, 120);
-
-		// スライダー | Slider
-		SimpleGUI::Slider(U"speed: {:.1f}"_fmt(speed), speed, 100, 400, Vec2{ 520, 420 }, 140, 120);
-
-		// 左キーが押されていたら | If left key is pressed
-		if (KeyLeft.pressed())
-		{
-			// プレイヤーが左に移動する | Player moves left
-			playerPosX = Max((playerPosX - speed * Scene::DeltaTime()), 60.0);
-			isPlayerFacingRight = false;
-		}
-
-		// 右キーが押されていたら | If right key is pressed
-		if (KeyRight.pressed())
-		{
-			// プレイヤーが右に移動する | Player moves right
-			playerPosX = Min((playerPosX + speed * Scene::DeltaTime()), 740.0);
-			isPlayerFacingRight = true;
-		}
-
-		// プレイヤーを描く | Draw the player
-		emoji.scaled(0.75).mirrored(isPlayerFacingRight).drawAt(playerPosX, 540);
 	}
 }
+
 
 //
 // - Debug ビルド: プログラムの最適化を減らす代わりに、エラーやクラッシュ時に詳細な情報を得られます。
