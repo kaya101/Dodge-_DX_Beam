@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dodge!!_DX_Beam", "Dodge!!_DX_Beam.vcxproj", "{C0C40117-7EF3-41DD-9062-24B2D31D8140}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0C40117-7EF3-41DD-9062-24B2D31D8140}.Debug|x64.ActiveCfg = Debug|x64
+		{C0C40117-7EF3-41DD-9062-24B2D31D8140}.Debug|x64.Build.0 = Debug|x64
+		{C0C40117-7EF3-41DD-9062-24B2D31D8140}.Release|x64.ActiveCfg = Release|x64
+		{C0C40117-7EF3-41DD-9062-24B2D31D8140}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A9449765-91DB-4003-A710-52D0D72695FA}
+	EndGlobalSection
+EndGlobal
