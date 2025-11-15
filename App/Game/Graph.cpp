@@ -59,33 +59,33 @@ LogicRange GraphCamera::ZoomLogicRange(const LogicRange& logicRange, const doubl
 Graph& Graph::operator=(const Graph& other)
 {
 	if (this != &other) {
-		_numSamples = other._numSamples;
-		_cm = other._cm;
+		m_numSamples = other.m_numSamples;
+		m_cm = other.m_cm;
 	}
 	return *this;
 }
 
 void Graph::Create(const GraphCamera* camera, const Function func)
 {
-	_values.clear();
-	_values.resize(_numSamples + 1);
-	for (size_t i = 0; i < static_cast<int32_t>(_values.size()); ++i)
+	m_values.clear();
+	m_values.resize(m_numSamples + 1);
+	for (size_t i = 0; i < static_cast<int32_t>(m_values.size()); ++i)
 	{
-		_values[i].x = (camera->Min().x + camera->Step(_numSamples).x * i);
-		_values[i].y = func(_values[i].x);
+		m_values[i].x = (camera->Min().x + camera->Step(m_numSamples).x * i);
+		m_values[i].y = func(m_values[i].x);
 	}
-	_curve = ToFunctionCurve(camera, _values, _numSamples);
+	m_curve = ToFunctioncurve(camera, m_values, m_numSamples);
 }
 
 void Graph::Draw(const GraphCamera* camera) const
 {
 	camera->ScreenBox().draw(dx2::palette::base::white);
-	_curve.draw(6, dx2::palette::base::black);
+	m_curve.draw(6, dx2::palette::base::black);
 }
 
-Graph::FunctionCurve Graph::ToFunctionCurve(const GraphCamera* camera, std::vector<Vec2> const& values, const SampleCount numSamples) const
+Graph::Functioncurve Graph::ToFunctioncurve(const GraphCamera* camera, std::vector<Vec2> const& values, const SampleCount numSamples) const
 {
-	FunctionCurve ls(static_cast<int32_t>(values.size()));
+	Functioncurve ls(static_cast<int32_t>(values.size()));
 	for (size_t i = 0; i < static_cast<int32_t>(ls.size()); ++i)
 	{
 		// 論理座標で範囲外の物を生成しない.

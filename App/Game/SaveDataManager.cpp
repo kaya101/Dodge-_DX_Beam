@@ -5,15 +5,13 @@
 /*	FileData start		********************************************************************************************************************/
 
 SaveData::SaveData(const String& saveDataSubDirName, const GraphCamera& camera, const Graph& graph)
-	: saveDataSubDirName(saveDataSubDirName), camera(camera), graph(graph) {}
+	: saveDataSubDirName(saveDataSubDirName) {}
 
 SaveData& SaveData::operator=(const SaveData& other)
 {
 	if (this != &other)
 	{
 		saveDataSubDirName = other.saveDataSubDirName;
-		camera = other.camera;
-		graph = other.graph;
 	}
 	return *this;
 }
@@ -87,12 +85,12 @@ bool SaveDataLoader::IsBinFile(const FilePath& path)
 
 void SaveDataManager::Load(GameData& gd) const
 {
-	SaveDataLoader::Load(gd.saveData, FileSystem::PathAppend(_rootDirName, gd.saveData.saveDataSubDirName));
+	//SaveDataLoader::Load(gd.saveData, FileSystem::PathAppend(_rootDirName, gd.saveData.saveDataSubDirName));
 }
 
 void SaveDataManager::Store(const GameData& gd) const
 {
-	SaveDataWriter::Store(gd.saveData, FileSystem::PathAppend(_rootDirName, gd.saveData.saveDataSubDirName));
+	//SaveDataWriter::Store(gd.saveData, FileSystem::PathAppend(_rootDirName, gd.saveData.saveDataSubDirName));
 }
 
 /*		SaveDataManager end			*********************************************************************************************************/

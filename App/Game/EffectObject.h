@@ -1,11 +1,12 @@
 ﻿#pragma once
+#include "../Utils/Common.h"
 #include "Player.h"// 前方宣言だけではポインタでやりくりできないらしい.
 #include "Graph.h"
 
 // ゲームシーンでまとめて渡すもの.
 struct UpdateContext
 {
-	GraphCamera& pCamera;
+	//GraphCamera& pCamera;
 	Graph& pGraph;
 	Player& pPlayer;
 };
@@ -28,7 +29,7 @@ public:
 protected:
 	String m_name;						// アイテム名.
 	ColorF m_color;						// 本体の色.
-	s3d::RoundRect m_body;				// 当たり判定.
+	Body m_body;						// 当たり判定.
 	Vec2 m_velocity;					// 速度.
 	Vec2 m_spawnPos;					// 出現点.
 	PositionUpdater m_positionUpdater;	// 動きの関数.
@@ -36,23 +37,25 @@ protected:
 	bool m_consumed;					// 削除フラグ.
 };
 
+static constexpr int32_t size = 60;
+
 static const Vec2 setSpawnPoint()
 {
 	Vec2 pos{};
 	// 上下.
 	if (rand() % 2 == 0) {
-		pos.x = ScreenRect.pos.x + rand() % static_cast<int32_t>(ScreenRect.w + 1);
-		pos.y = (rand() % 2 == 0) ? ScreenRect.y : ScreenRect.bottomCenter().y;
+		pos.x = size * 0.52 + ScreenRect.pos.x + rand() % static_cast<int32_t>(ScreenRect.w + 1 - size);
+		pos.y = (rand() % 2 == 0) ? ScreenRect.y + size * 0.52 : ScreenRect.bottomCenter().y - size * 0.52;
 	}
 
 	// 左右.
 	else {
-		pos.x = (rand() % 2 == 0) ? ScreenRect.x : ScreenRect.rightCenter().x;
-		pos.y = ScreenRect.pos.y + rand() % static_cast<int32_t>(ScreenRect.h + 1);
+		pos.x = (rand() % 2 == 0) ? ScreenRect.x + size * 0.52 : ScreenRect.rightCenter().x - size * 0.52;
+		pos.y = ScreenRect.pos.y + size * 0.52 + rand() % static_cast<int32_t>(ScreenRect.h + 1 - size);
 	}
 	return pos;
 }
-static constexpr Size BodySize() { return Size(12 + rand() % 160, 12 + rand() % 160); }
+//static constexpr Size BodySize() { return Size(12 + rand() % 160, 12 + rand() % 160); }
 
 enum class ItemType : int8_t
 {
@@ -63,8 +66,6 @@ enum class ItemType : int8_t
 	//Flipper,
 	Integraler
 };
-
-static constexpr int32_t size = 60;
 
 // dx アイテム.
 class DxItem : public EffectObject
@@ -122,33 +123,7 @@ private:
 
 
 
-//// 左右に揺れる dx クラス.
-//class Shake : public EffectObject
-//{
-//public:
-//	Shake();
-//	~Shake() = default;
-//	void applyEffect(UpdateContext& context) override;
-//
-//private:
-//	static constexpr ColorF shakeBodyColor = dx2::palette::base::orange;
-//	PositionUpdater _shakeEasing = dx2::easing::Simple;
-//};
 
-
-//// 狙い撃ちする dx クラス.
-//class Shot : public EffectObject
-//{
-//public:
-//	Shot();
-//	~Shot() = default;
-//	void draw() const;
-//	void applyEffect(UpdateContext& context) override;
-//
-//private:
-//	static constexpr ColorF shotBodyColor = dx2::palette::base::lime;
-//	PositionUpdater _shotEasing = dx2::easing::ChargeShot;
-//};
 
 //// player を小さくするアイテム.
 //class Smaller : public EffectObject

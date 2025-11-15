@@ -8,12 +8,12 @@ EditFunction::EditFunction(const InitData& init)
 	: IScene(init)
 {
 	font::MainFont().preload(EditFunctionTitle);
-	getData().Adjust(ScreenRect);
+	//getData().Adjust(ScreenRect);
 }
 
 void EditFunction::update()
 {
-	pGraphTool->update(pGraph.get(), pCamera.get());
+	//pGraphTool->update(pGraph.get(), pCamera.get());
 
 	// 決定ボタン.
 	if (_buttons.at(ButtonKey::Decide).IsReleased())
@@ -58,7 +58,7 @@ void EditFunction::drawUI() const
 {
 	font::MainFont()(EditFunctionTitle).draw(40, TitlePos, dx2::palette::base::black);
 
-	getData().saveData.graph.Draw(&getData().saveData.camera);
+	//getData().saveData.graph.Draw(&getData().saveData.camera);
 
 	for (const auto& it : _buttons) it.second.draw();
 }

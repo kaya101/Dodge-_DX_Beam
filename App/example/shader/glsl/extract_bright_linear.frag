@@ -1,4 +1,4 @@
-//	Copyright (c) 2008-2025 Ryo Suzuki.
+﻿//	Copyright (c) 2008-2025 Ryo Suzuki.
 //	Copyright (c) 2016-2025 OpenSiv3D Project.
 //	Licensed under the MIT License.
 
@@ -35,7 +35,7 @@ layout(std140) uniform PSConstants2D
 //
 //	Functions
 //
-vec3 ApplySRGBCurve_Fast(vec3 color)
+vec3 ApplySRGBcurve_Fast(vec3 color)
 {
 	return pow(color, vec3(1.0f / 2.2f));
 }
@@ -48,7 +48,7 @@ void main()
 
 	if (0.25f < brightness)
 	{
-		FragColor = vec4(ApplySRGBCurve_Fast(abs(texColor)) * 0.25f, 1.0f);
+		FragColor = vec4(ApplySRGBcurve_Fast(abs(texColor)) * 0.25f, 1.0f);
 	}
 	else
 	{

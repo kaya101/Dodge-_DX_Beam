@@ -162,9 +162,6 @@
     <ClCompile Include="App\Utils\Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="App\Utils\dx2Library.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="App\Utils\IGraphTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -178,6 +175,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="App\Game\SaveDataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="App\Utils\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -867,9 +867,6 @@
     <ClInclude Include="App\Utils\Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="App\Utils\dx2Library.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="App\Utils\IGraphTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -895,6 +892,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="App\Game\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="App\Utils\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

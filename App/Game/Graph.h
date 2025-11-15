@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include "../Utils/dx2Library.h"
-
-using SampleCount = std::size_t;// サンプリング数.
+#include "../Utils/Common.h"
 
 // 論理座標の成分範囲.
 class LogicRange
@@ -89,24 +87,15 @@ private:
 };
 
 
-
-// デフォルトのサンプル数.
-static constexpr SampleCount N = 640;
-
-// 固定画面範囲.
-static constexpr RectF ScreenRect = { Arg::center(windowWidth * 0.5, windowHeight * 0.5), N, N };
-
 // グラフクラス.
 class Graph
 {
 public:
-	using CoeffMatrix = std::vector<double>;		// 係数行列.
-	using Function = std::function<double(double)>;	// f(x).
-	using FunctionCurve = LineString;				// 曲線. 関数のあの「線」.
+	using Functioncurve = LineString;				// 曲線. 関数のあの「線」.
 
 	constexpr Graph() = default;
 	constexpr Graph(const SampleCount numSamples, const CoeffMatrix& cm)
-		: _numSamples(numSamples), _cm(cm) {
+		: m_numSamples(numSamples), m_cm(cm) {
 	}
 	constexpr ~Graph() = default;
 
@@ -120,29 +109,29 @@ public:
 	void Draw(const GraphCamera* camera) const;
 
 	// 微分する.
-	constexpr Graph& Differentiate() { _cm = dx2::math::Differentiate(_cm); return *this; }
+	constexpr Graph& Differentiate() { m_cm = dx2::math::Differentiate(m_cm); return *this; }
 
 	// 不定積分する.
-	constexpr Graph& Integrate() { _cm = dx2::math::Integrate(_cm); return *this; }
+	constexpr Graph& Integrate() { m_cm = dx2::math::Integrate(m_cm); return *this; }
 
 	// セッター.
-	Graph& SetNumSamples(const SampleCount numSamples) { _numSamples = numSamples; return *this; }
+	Graph& SetnumSamples(const SampleCount numSamples) { m_numSamples = numSamples; return *this; }
 
 	// ゲッター.
-	const SampleCount NumSamples() const { return _numSamples; }
-	const CoeffMatrix& CM() const { return _cm; }
-	const FunctionCurve& Curve() const { return _curve; }
+	const SampleCount numSamples() const { return m_numSamples; }
+	const CoeffMatrix& cm() const { return m_cm; }
+	const Functioncurve& curve() const { return m_curve; }
 
 	// シリアライズに対応させるためのメンバ関数.
 	template <class Archive>
-	void SIV3D_SERIALIZE(Archive& archive) { archive(_numSamples, _cm); }
+	void SIV3D_SERIALIZE(Archive& archive) { archive(m_numSamples, m_cm); }
 
 private:
-	SampleCount _numSamples;	// サンプリング数.
-	CoeffMatrix _cm;			// 係数行列.
-	FunctionCurve _curve;		// 曲線.
-	std::vector<Vec2> _values;	// サンプリング値.
+	SampleCount m_numSamples;	// サンプリング数.
+	CoeffMatrix m_cm;			// 係数行列.
+	Functioncurve m_curve;		// 曲線.
+	std::vector<Vec2> m_values;	// サンプリング値.
 
 	// サンプリング値を曲線に変換する.
-	FunctionCurve ToFunctionCurve(const GraphCamera* camera, std::vector<Vec2> const& values, const SampleCount numSamples) const;
+	Functioncurve ToFunctioncurve(const GraphCamera* camera, std::vector<Vec2> const& values, const SampleCount numSamples) const;
 };

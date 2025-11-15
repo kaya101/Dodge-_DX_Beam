@@ -1,4 +1,4 @@
-//-----------------------------------------------
+﻿//-----------------------------------------------
 //
 //	This file is part of the Siv3D Engine.
 //
@@ -31,7 +31,7 @@ namespace s3d
 //
 //	Functions
 //
-float3 ApplySRGBCurve_Fast(float3 color)
+float3 ApplySRGBcurve_Fast(float3 color)
 {
 	return pow(color, (1.0f / 2.2f));
 }
@@ -44,7 +44,7 @@ float4 PS(s3d::PSInput input) : SV_TARGET
 
 	if (0.25f < brightness)
 	{
-		return float4(ApplySRGBCurve_Fast(abs(texColor)) * 0.25f, 1.0f);
+		return float4(ApplySRGBcurve_Fast(abs(texColor)) * 0.25f, 1.0f);
 	}
 	else
 	{

@@ -60,7 +60,7 @@ void Play::update()
 			//createItems(ItemType::Flipper);
 
 			// グラフを計算する.
-			pGraph->Create(pCamera.get(), [&](const double x) { return dx2::math::EvalHoner(pGraph->CM(), x); });
+			//pGraph->Create(pCamera.get(), [&](const double x) { return dx2::math::EvalHoner(pGraph->cm(), x); });
 		}
 
 		break;
@@ -94,7 +94,7 @@ void Play::update()
 		}
 
 		// プレイヤーの状態を更新する.
-		pPlayer->update(pGraph.get(), pCamera.get());
+		//pPlayer->update(pGraph.get(), pCamera.get());
 
 		// dx ビームの状態を更新する.
 		for (auto& it : dxBeams) {
@@ -126,7 +126,7 @@ void Play::update()
 
 			// グラフを復活させる.
 			pGraph = nullptr;
-			pGraph = std::make_unique<Graph>(getData().saveData.graph.NumSamples(), getData().saveData.graph.CM());
+			pGraph = std::make_unique<Graph>(getData().numSamples, getData().coeffMatrix);
 
 			ps = PlayScene::Start;
 		}
@@ -170,7 +170,7 @@ void Play::draw() const
 
 	case PlayScene::Play:
 
-		pGraph->Draw(pCamera.get());
+		//pGraph->Draw(pCamera.get());
 
 		for (const auto& it : dxBeams) {
 			if (it != nullptr) it->draw();
@@ -234,7 +234,7 @@ void Play::drawBackGround() const
 	font::MainFont()(U"O").drawAt(22, ScreenRect.center() + Vec2{ -16, 16 }, dx2::palette::base::black);
 
 	// 平面の格子線.
-	//player->graph().gs().drawGrid(ScreenRect, player->graph().pa(), player->graph().NumSamples());
+	//player->graph().gs().drawGrid(ScreenRect, player->graph().pa(), player->graph().numSamples());
 }
 
 // UI を描く関数.
@@ -281,12 +281,6 @@ void Play::createDxBeams()
 
 	// dx ビームの中身を詰める.
 	for (int32_t i = 0; i < dxBeams.size(); ++i) {
-		/*if (rand() % 2 == 0) {
-			dxBeams[i] = std::make_unique<Shake>();
-		}
-		else {
-			dxBeams[i] = std::make_unique<Shot>();
-		}*/
 		dxBeams[i] = std::make_unique<DxItem>(
 			setSpawnPoint(),
 			Vec2(10.0, 10.0),

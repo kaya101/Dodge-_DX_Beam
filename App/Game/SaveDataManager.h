@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Graph.h"
+#include "../Utils/Common.h"
 
 // セーブデータ.
 class SaveData
@@ -14,11 +15,14 @@ public:
 
 	// シリアライズに対応させるためのメンバ関数.
 	template <class Archive>
-	void SIV3D_SERIALIZE(Archive& archive) { archive(saveDataSubDirName, camera, graph); }
+	void SIV3D_SERIALIZE(Archive& archive) { archive(saveDataSubDirName); }
 
 	String saveDataSubDirName;	// セーブデータのディレクトリ名.
-	GraphCamera camera;			// カメラ.
-	Graph graph;				// グラフ.
+	//GraphCamera camera;			// カメラ.
+	//Graph graph;				// グラフ.
+	SampleCount numSamples; // サンプリング数.
+	LogicRange logicRange; // 表示している論理座標範囲.
+	CoeffMatrix coeffMatrix; // 係数行列.
 };
 
 

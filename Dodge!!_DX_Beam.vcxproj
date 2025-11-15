@@ -130,8 +130,8 @@
     </ClCompile>
     <ClCompile Include="App\Utils\BaseButton.cpp" />
     <ClCompile Include="App\Utils\Common.cpp" />
-    <ClCompile Include="App\Utils\dx2Library.cpp" />
     <ClCompile Include="App\Utils\IGraphTool.cpp" />
+    <ClCompile Include="App\Utils\Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="App\engine\texture\box-shadow\128.png" />
@@ -355,9 +355,9 @@
     <ClInclude Include="App\stdafx.h" />
     <ClInclude Include="App\Utils\BaseButton.h" />
     <ClInclude Include="App\Utils\Common.h" />
-    <ClInclude Include="App\Utils\dx2Library.h" />
     <ClInclude Include="App\Utils\IGraphTool.h" />
     <ClInclude Include="App\Utils\Utils.h" />
+    <ClInclude Include="App\Utils\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App\example\obj\blacksmith.obj">

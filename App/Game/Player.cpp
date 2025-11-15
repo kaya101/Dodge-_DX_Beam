@@ -36,8 +36,8 @@ void Player::update(Graph* pGraph, const GraphCamera* pCamera)
 	if (_expTimer.reachedZero()) {
 		_expTimer.reset();
 		_invincible = false;
-		pGraph->Create(pCamera, [&](const double x) { return dx2::math::EvalHoner(pGraph->CM(), x); });
-		//createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.CM(), x); });
+		pGraph->Create(pCamera, [&](const double x) { return dx2::math::EvalHoner(pGraph->cm(), x); });
+		//createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.cm(), x); });
 	}
 
 	if (_sizeTimer.reachedZero()) {
@@ -51,7 +51,7 @@ void Player::update(Graph* pGraph, const GraphCamera* pCamera)
 
 	if (interval < accumlatedTime) {
 		_pos += (_buttons[PlayerAction::Right] - _buttons[PlayerAction::Left]) * 6;
-		_pos = (_pos < 0) ? 0 : (_pos > pGraph->NumSamples() - 1) ? pGraph->NumSamples() - 1 : _pos;
+		_pos = (_pos < 0) ? 0 : (_pos > pGraph->numSamples() - 1) ? pGraph->numSamples() - 1 : _pos;
 		accumlatedTime = 0.0000000000;
 	}
 
@@ -64,8 +64,8 @@ void Player::update(Graph* pGraph, const GraphCamera* pCamera)
 
 
 	// 移動先の座標へ変更する.
-	m_body = Circle(pGraph->Curve()[_pos], playerSizes[_sizeIndex]);
-	//m_body = Circle(_graph.Curve()[_pos], playerSizes[_sizeIndex]);
+	m_body = Circle(pGraph->curve()[_pos], playerSizes[_sizeIndex]);
+	//m_body = Circle(_graph.curve()[_pos], playerSizes[_sizeIndex]);
 }
 
 void Player::draw(const Font& font) const
@@ -103,7 +103,7 @@ void Player::takeHeal(const int32_t amount)
 	_degree = std::max(5, _degree + amount);
 
 	// 不定積分.
-	//integrate().createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.CM(), x); });
+	//integrate().createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.cm(), x); });
 }
 
 void Player::pickupItem(const int32_t itemType)
@@ -128,7 +128,7 @@ void Player::pickupItem(const int32_t itemType)
 	//}
 	//else if (itemType == static_cast<int32_t>(ItemType::Flipper)) {
 	//	//if (_invincible) createGraph(&_camera, [&](const double x) { return std::exp(-x); });
-	//	//else createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.CM(), -x); });
+	//	//else createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.cm(), -x); });
 	//}
 	else if (itemType == static_cast<int32_t>(ItemType::Integraler)) {
 		takeHeal();

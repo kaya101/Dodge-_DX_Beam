@@ -34,8 +34,8 @@ void GraphGlideTool::Slide(Graph* graph, GraphCamera* camera)
 
 	if (_screenVel.length() != 0.0)
 	{
-		camera->Slide(_screenVel, graph->NumSamples());
-		graph->Create(camera, [&](double x) { return dx2::math::EvalHoner(graph->CM(), x); });
+		camera->Slide(_screenVel, graph->numSamples());
+		graph->Create(camera, [&](double x) { return dx2::math::EvalHoner(graph->cm(), x); });
 	}
 }
 
@@ -45,8 +45,8 @@ void GraphGlideTool::Zoom(Graph* graph, GraphCamera* camera)
 	{
 		if (_zoomRate > 0.1 && _zoomRate < 8.0)
 		{
-			camera->Zoom(_zoomRate, graph->NumSamples());
-			graph->Create(camera, [&](double x) { return dx2::math::EvalHoner(graph->CM(), x); });
+			camera->Zoom(_zoomRate, graph->numSamples());
+			graph->Create(camera, [&](double x) { return dx2::math::EvalHoner(graph->cm(), x); });
 		}
 	}
 	_zoomRate = false;

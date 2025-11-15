@@ -41,17 +41,18 @@ private:
 	PlayScene ps = PlayScene::Start;
 
 	// player.
-	SampleCount initPlayerAxis = static_cast<SampleCount>(getData().saveData.graph.NumSamples() / 2);
+	SampleCount initPlayerAxis = static_cast<SampleCount>(getData().numSamples / 2);
 	std::unique_ptr<Player> pPlayer = std::make_unique<Player>(initPlayerAxis);
 
 	// カメラ.
-	std::unique_ptr<GraphCamera> pCamera = std::make_unique<GraphCamera>(getData().saveData.camera);
+	//std::unique_ptr<GraphCamera> pCamera = std::make_unique<GraphCamera>(getData().camera);
 
 	// グラフ.
-	std::unique_ptr<Graph> pGraph = std::make_unique<Graph>(getData().saveData.graph.NumSamples(), getData().saveData.graph.CM());
+	std::unique_ptr<Graph> pGraph = std::make_unique<Graph>(getData().numSamples, getData().coeffMatrix);
 
 	// まとめセット.
-	UpdateContext updateContext{ *pCamera, *pGraph, *pPlayer };
+	//UpdateContext updateContext{ *pCamera, *pGraph, *pPlayer };
+	UpdateContext updateContext{ *pGraph, *pPlayer };
 
 	// dx ビーム.
 	//static constexpr int32_t dxBeamsSize = 4;// 同時生成される個数.
