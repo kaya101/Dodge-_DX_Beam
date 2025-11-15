@@ -8,8 +8,8 @@ class IGraphTool
 {
 public:
 	virtual ~IGraphTool() = default;
-	virtual void Update(Graph* graph, GraphCamera* camera) = 0;
-	virtual void Draw() const = 0;
+	virtual void update(Graph* graph, GraphCamera* camera) = 0;
+	virtual void draw() const = 0;
 };
 
 // 掴んで滑らかに移動（パン操作）.
@@ -19,8 +19,8 @@ class GraphGlideTool : public IGraphTool
 public:
 	GraphGlideTool();
 	~GraphGlideTool() = default;
-	void Update(Graph* graph, GraphCamera* camera) override;
-	void Draw() const override;
+	void update(Graph* graph, GraphCamera* camera) override;
+	void draw() const override;
 
 private:
 	Vec2 _screenVel;									// スクリーン画面の移動速度.
@@ -50,8 +50,8 @@ class GraphZoomBoxTool : public IGraphTool
 public:
 	GraphZoomBoxTool() = default;
 	~GraphZoomBoxTool() = default;
-	void Update(Graph* graph, GraphCamera* camera) override;
-	void Draw() const override;
+	void update(Graph* graph, GraphCamera* camera) override;
+	void draw() const override;
 };
 
 // 指定倍率で拡大・縮小（スコープ／ズーム）.
@@ -60,8 +60,8 @@ class GraphScopeTool : public IGraphTool
 public:
 	GraphScopeTool() = default;
 	~GraphScopeTool() = default;
-	void Update(Graph* graph, GraphCamera* camera) override;
-	void Draw() const override;
+	void update(Graph* graph, GraphCamera* camera) override;
+	void draw() const override;
 };
 
 // x, y の範囲を直接指定（範囲選択）.
@@ -70,8 +70,8 @@ class GraphRangeSelector : public IGraphTool
 public:
 	GraphRangeSelector() = default;
 	~GraphRangeSelector() = default;
-	void Update(Graph* graph, GraphCamera* camera) override;
-	void Draw() const override;
+	void update(Graph* graph, GraphCamera* camera) override;
+	void draw() const override;
 
 private:
 	LogicRange _requestedLogicRange;// 変更先の論理座標の範囲.

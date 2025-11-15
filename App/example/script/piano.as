@@ -34,7 +34,7 @@ void Main()
 		0, 1, 2, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22
 	};
 
-	while (System::Update())
+	while (System::update())
 	{
 		// キーが押されたら対応する音を再生
 		for (int32 i = 0; i < NumKeys; ++i)

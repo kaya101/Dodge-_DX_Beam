@@ -89,18 +89,18 @@ void Play::update()
 		// アイテムの状態を更新する.
 		for (auto& it : items) {
 			if (it == nullptr) continue;
-			it->Update(updateContext);
-			if (it->IsConsumed()) it = nullptr;
+			it->update(updateContext);
+			if (it->isConsumed()) it = nullptr;
 		}
 
 		// プレイヤーの状態を更新する.
-		pPlayer->Update(pGraph.get(), pCamera.get());
+		pPlayer->update(pGraph.get(), pCamera.get());
 
 		// dx ビームの状態を更新する.
 		for (auto& it : dxBeams) {
 			if (it == nullptr) continue;
-			it->Update(updateContext);
-			if (it->IsConsumed()) it = nullptr;
+			it->update(updateContext);
+			if (it->isConsumed()) it = nullptr;
 		}
 
 		// 次の dx ビームを生成する.
@@ -173,11 +173,11 @@ void Play::draw() const
 		pGraph->Draw(pCamera.get());
 
 		for (const auto& it : dxBeams) {
-			if (it != nullptr) it->Draw();
+			if (it != nullptr) it->draw();
 		}
 
 		for (const auto& it : items) {
-			if (it != nullptr) it->Draw();
+			if (it != nullptr) it->draw();
 		}
 
 		pPlayer->draw();
@@ -281,12 +281,17 @@ void Play::createDxBeams()
 
 	// dx ビームの中身を詰める.
 	for (int32_t i = 0; i < dxBeams.size(); ++i) {
-		if (rand() % 2 == 0) {
+		/*if (rand() % 2 == 0) {
 			dxBeams[i] = std::make_unique<Shake>();
 		}
 		else {
 			dxBeams[i] = std::make_unique<Shot>();
-		}
+		}*/
+		dxBeams[i] = std::make_unique<DxItem>(
+			setSpawnPoint(),
+			Vec2(10.0, 10.0),
+			[](const Vec2& velocity) { return ItemMovement::linear(velocity); }
+		);
 	}
 
 	// 生成頻度のタイマーをスタート.
@@ -303,21 +308,38 @@ void Play::createItems()
 	for (int32_t i = 0; i < items.size(); ++i) {
 		const int32_t type = rand() % 5;
 		if (type == 0) {
-			items[i] = std::make_unique<ExpItem>();
-		}
-		else if (type == 1) {
-			items[i] = std::make_unique<Smaller>();
-		}
-		else if (type == 2) {
-			items[i] = std::make_unique<Bigger>();
-		}
-		else if (type == 3) {
-			items[i] = std::make_unique<Flipper>();
+			items[i] = std::make_unique<ExpItem>(
+				setSpawnPoint(),
+				Vec2(1.0, 1.0),
+				[](const Vec2& velocity) { return ItemMovement::wave(velocity); }
+			);
 		}
 		else {
-			items[i] = std::make_unique<Integraler>();
+			items[i] = std::make_unique<Integraler>(
+				setSpawnPoint(),
+				Vec2(1.0, 1.0),
+				[](const Vec2& velocity) { return ItemMovement::wave(velocity); }
+			);
 		}
 	}
+	//for (int32_t i = 0; i < items.size(); ++i) {
+	//	const int32_t type = rand() % 5;
+	//	if (type == 0) {
+	//		items[i] = std::make_unique<ExpItem>();
+	//	}
+	//	/*else if (type == 1) {
+	//		items[i] = std::make_unique<Smaller>();
+	//	}
+	//	else if (type == 2) {
+	//		items[i] = std::make_unique<Bigger>();
+	//	}
+	//	else if (type == 3) {
+	//		items[i] = std::make_unique<Flipper>();
+	//	}*/
+	//	else {
+	//		items[i] = std::make_unique<Integraler>();
+	//	}
+	//}
 
 	// 生成頻度のタイマーをスタート.
 	itemPaceTimer.restart();
@@ -327,9 +349,15 @@ void Play::createItems(const ItemType itemType)
 {
 	items.resize(itemNum);
 	if (itemType == ItemType::Exp) {
-		for (int32_t i = 0; i < items.size(); ++i) items[i] = std::make_unique<ExpItem>();
+		for (int32_t i = 0; i < items.size(); ++i) {
+			items[i] = std::make_unique<ExpItem>(
+				setSpawnPoint(),
+				Vec2(1.0, 1.0),
+				[](const Vec2& velocity) { return ItemMovement::wave(velocity); }
+			);
+		}
 	}
-	else if (itemType == ItemType::Smaller) {
+	/*else if (itemType == ItemType::Smaller) {
 		for (int32_t i = 0; i < items.size(); ++i) items[i] = std::make_unique<Smaller>();
 	}
 	else if (itemType == ItemType::Bigger) {
@@ -337,9 +365,15 @@ void Play::createItems(const ItemType itemType)
 	}
 	else if (itemType == ItemType::Flipper) {
 		for (int32_t i = 0; i < items.size(); ++i) items[i] = std::make_unique<Flipper>();
-	}
+	}*/
 	else if (itemType == ItemType::Integraler) {
-		for (int32_t i = 0; i < items.size(); ++i) items[i] = std::make_unique<Integraler>();
+		for (int32_t i = 0; i < items.size(); ++i) {
+			items[i] = std::make_unique<Integraler>(
+				setSpawnPoint(),
+				Vec2(1.0, 1.0),
+				[](const Vec2& velocity) { return ItemMovement::wave(velocity); }
+			);
+		}
 	}
 	else {
 		Print << U"Undefined Item is called.";

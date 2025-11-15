@@ -26,21 +26,21 @@ class Player
 {
 public:
 
-	// player の大きさ.
-	enum class Size : int8_t
-	{
-		Smallest,// 縮小 2 段階目.
-		Smaller, // 縮小 1 段階目.
-		Normal,  // 基本サイズ.
-		Bigger,  // 拡大 1 段階目.
-		Biggest, // 拡大 2 段階目.
-		PlayerSizeNum// これを最後に書く.
-	};
+	//// player の大きさ.
+	//enum class Size : int8_t
+	//{
+	//	Smallest,// 縮小 2 段階目.
+	//	Smaller, // 縮小 1 段階目.
+	//	Normal,  // 基本サイズ.
+	//	Bigger,  // 拡大 1 段階目.
+	//	Biggest, // 拡大 2 段階目.
+	//	PlayerSizeNum// これを最後に書く.
+	//};
 
 	Player(const int32_t pos);
 	constexpr ~Player() = default;
 
-	void Update(Graph* pGraph, const GraphCamera* pCamera);
+	void update(Graph* pGraph, const GraphCamera* pCamera);
 
 	void draw(const Font& font = FontAsset(dx2::font::FontName(dx2::font::FontKey::Main))) const;
 
@@ -71,7 +71,7 @@ public:
 	void restartSizeTimer() { _sizeTimer.restart(); }
 
 	// ゲッター.
-	const Circle& body() const { return _body; };
+	const Circle& body() const { return m_body; };
 	int32_t sizeIndex() const { return _sizeIndex; }
 	int32_t degree() const { return _degree; }
 	bool isCompletelyDxed() const { return _completelyDxed; }
@@ -83,7 +83,7 @@ public:
 	SecondsF lastSizeTime() const { return _sizeTimer.remaining(); }
 
 private:
-	Circle _body;// 当たり判定 & 表示.
+	Circle m_body;// 当たり判定 & 表示.
 	int32_t _sizeIndex;
 	int32_t _pos;// player がいるグラフ上の点.
 	int32_t _degree;// 関数の今の次数.

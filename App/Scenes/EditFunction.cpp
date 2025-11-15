@@ -13,7 +13,7 @@ EditFunction::EditFunction(const InitData& init)
 
 void EditFunction::update()
 {
-	pGraphTool->Update(pGraph.get(), pCamera.get());
+	pGraphTool->update(pGraph.get(), pCamera.get());
 
 	// 決定ボタン.
 	if (_buttons.at(ButtonKey::Decide).IsReleased())
@@ -60,7 +60,7 @@ void EditFunction::drawUI() const
 
 	getData().saveData.graph.Draw(&getData().saveData.camera);
 
-	for (const auto& it : _buttons) it.second.Draw();
+	for (const auto& it : _buttons) it.second.draw();
 }
 
 std::map<EditFunction::ButtonKey, TextButton> EditFunction::_buttons =

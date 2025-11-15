@@ -18,7 +18,7 @@ void Main()
 		}	
 	}
 
-	while (System::Update())
+	while (System::update())
 	{
 		const Rect paddle(Arg::center(Cursor::Pos().x, 500), 60, 10);
 

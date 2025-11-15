@@ -10,153 +10,183 @@ struct UpdateContext
 	Player& pPlayer;
 };
 
-// player, Graph に影響を及ぼすオブジェクト基本クラス.
+// player, Graph に影響を及ぼすオブジェクト 抽象クラス.
 class EffectObject
 {
 public:
-	using EasingFunc = std::function<double(double)>;// イージング関数.
+	using PositionUpdater = std::function<Vec2(Vec2)>;// 移動関数.
 
-	EffectObject(const String& name, const Size& bodySize, const double rounded, const ColorF& bodyColor, const EasingFunc easing);
+	// 名前を値渡しに変更（内部で move して保持）
+	EffectObject(String name, const ColorF& color, const Vec2& pos, const SizeF& size, const Vec2& velocity, const PositionUpdater positionUpdater);
 	~EffectObject() = default;
-	void Update(UpdateContext& context);
-	void Draw() const;
-	bool CanAffect() const { return _active && not _consumed; }
-	bool IsConsumed() const { return _consumed; }
-	virtual void ApplyEffect(UpdateContext& context) = 0;
-
-	static constexpr SecondsF timeLimit = 1.6s;// 出現時間.
+	virtual void update(UpdateContext& context) = 0;
+	virtual void draw() const = 0;
+	virtual void applyEffect(UpdateContext& context) = 0;
+	bool isConsumed() const { return m_consumed; }
+	bool canAffect() const { return m_active && not m_consumed; }
 
 protected:
-	String _name;			// アイテム名.
-	ColorF _textColor;		// テキストの色.
-	s3d::RoundRect _body;	// 当たり判定.
-	ColorF _bodyColor;		// 本体の色.
-	Vec2 _spawnPos;			// 出現点.
-	Vec2 _vanishPos;		// 消滅点.
-	s3d::Timer _timer;		// 移動のタイマー.
-	bool _active;			// 効果を発動できるかフラグ.
-	bool _consumed;			// 削除フラグ.
-	EasingFunc _easing;		// イージング関数.
-
-private:
-	Vec2 SetPoint() const;
+	String m_name;						// アイテム名.
+	ColorF m_color;						// 本体の色.
+	s3d::RoundRect m_body;				// 当たり判定.
+	Vec2 m_velocity;					// 速度.
+	Vec2 m_spawnPos;					// 出現点.
+	PositionUpdater m_positionUpdater;	// 動きの関数.
+	bool m_active;						// 効果を発動できるかフラグ.
+	bool m_consumed;					// 削除フラグ.
 };
 
+static const Vec2 setSpawnPoint()
+{
+	Vec2 pos{};
+	// 上下.
+	if (rand() % 2 == 0) {
+		pos.x = ScreenRect.pos.x + rand() % static_cast<int32_t>(ScreenRect.w + 1);
+		pos.y = (rand() % 2 == 0) ? ScreenRect.y : ScreenRect.bottomCenter().y;
+	}
 
-
-
+	// 左右.
+	else {
+		pos.x = (rand() % 2 == 0) ? ScreenRect.x : ScreenRect.rightCenter().x;
+		pos.y = ScreenRect.pos.y + rand() % static_cast<int32_t>(ScreenRect.h + 1);
+	}
+	return pos;
+}
 static constexpr Size BodySize() { return Size(12 + rand() % 160, 12 + rand() % 160); }
-
-// 左右に揺れる dx クラス.
-class Shake : public EffectObject
-{
-public:
-	Shake();
-	~Shake() = default;
-	void ApplyEffect(UpdateContext& context) override;
-
-private:
-	static constexpr ColorF shakeBodyColor = dx2::palette::base::orange;
-	EasingFunc _shakeEasing = dx2::easing::Simple;
-};
-
-
-// 狙い撃ちする dx クラス.
-class Shot : public EffectObject
-{
-public:
-	Shot();
-	~Shot() = default;
-	void Draw() const;
-	void ApplyEffect(UpdateContext& context) override;
-
-private:
-	static constexpr ColorF shotBodyColor = dx2::palette::base::lime;
-	EasingFunc _shotEasing = dx2::easing::ChargeShot;
-};
-
-
-
-
-
-
 
 enum class ItemType : int8_t
 {
+	Dx,
 	Exp,
-	Smaller,
-	Bigger,
-	Flipper,
+	//Smaller,
+	//Bigger,
+	//Flipper,
 	Integraler
 };
 
 static constexpr int32_t size = 60;
 
+// dx アイテム.
+class DxItem : public EffectObject
+{
+public:
+	static constexpr ColorF dxItemBodyColor = dx2::palette::pastel::red;
+	static constexpr SizeF dxItemBodySize = SizeF(size, size);
+	static constexpr ColorF textColor = dx2::palette::TextColor(dxItemBodyColor);
+	DxItem(const Vec2& pos, const Vec2& velocity, const PositionUpdater positionUpdater);
+	DxItem() = default;
+	~DxItem() = default;
+	void update(UpdateContext& context) override;
+	void draw() const override;
+	void applyEffect(UpdateContext& context) override;
+private:
+	inline static const String dxItemName = U"dx";
+};
+
 // exp アイテム.
 class ExpItem : public EffectObject
 {
 public:
-	ExpItem();
-	~ExpItem() = default;
-	void ApplyEffect(UpdateContext& context) override;
-
-private:
 	static constexpr ColorF expItemBodyColor = dx2::palette::pastel::blue;
-	EasingFunc _expItemEasing = dx2::easing::Simple;
-};
-
-
-// player を小さくするアイテム.
-class Smaller : public EffectObject
-{
-public:
-	Smaller();
-	~Smaller() = default;
-	void ApplyEffect(UpdateContext& context) override;
+	static constexpr SizeF expItemBodySize = SizeF(size, size);
+	static constexpr ColorF textColor = dx2::palette::TextColor(expItemBodyColor);
+	ExpItem(const Vec2& pos, const Vec2& velocity, const PositionUpdater positionUpdater);
+	ExpItem() = default;
+	~ExpItem() = default;
+	void update(UpdateContext& context) override;
+	void draw() const override;
+	void applyEffect(UpdateContext& context) override;
 
 private:
-	static constexpr ColorF smallerBodyColor = dx2::palette::pastel::paple;
-	EasingFunc _smallerEasing = dx2::easing::Simple;
+	inline static const String expItemName = U"exp";
 };
 
 
-// player を大きくするアイテム.
-class Bigger : public EffectObject
-{
-public:
-	Bigger();
-	~Bigger() = default;
-	void ApplyEffect(UpdateContext& context) override;
-
-private:
-	static constexpr ColorF biggerBodyColor = dx2::palette::base::yellow;
-	EasingFunc _biggerEasing = dx2::easing::Simple;
-};
-
-
-// グラフを x 軸反転させるアイテム.
-class Flipper : public EffectObject
-{
-public:
-	Flipper();
-	~Flipper() = default;
-	void ApplyEffect(UpdateContext& context) override;
-
-private:
-	static constexpr ColorF flipperBodyColor = dx2::palette::base::black;
-	EasingFunc _flipperEasing = dx2::easing::Simple;
-};
-
-
-// 不定積分をするアイテム.
+// integral(不定積分)アイテム.
 class Integraler : public EffectObject
 {
 public:
-	Integraler();
+	static constexpr ColorF integralerBodyColor = dx2::palette::base::deepBlue;
+	static constexpr SizeF integralerBodySize = SizeF(size, size);
+	static constexpr ColorF textColor = dx2::palette::TextColor(integralerBodyColor);
+	Integraler(const Vec2& pos, const Vec2& velocity, const PositionUpdater positionUpdater);
+	Integraler() = default;
 	~Integraler() = default;
-	void ApplyEffect(UpdateContext& context) override;
+	void update(UpdateContext& context) override;
+	void draw() const override;
+	void applyEffect(UpdateContext& context) override;
 
 private:
-	static constexpr ColorF integralerBodyColor = dx2::palette::base::deepBlue;
-	EasingFunc _integralerEasing = dx2::easing::Simple;
+	inline static const String integralerName = U"∫";
 };
+
+
+
+//// 左右に揺れる dx クラス.
+//class Shake : public EffectObject
+//{
+//public:
+//	Shake();
+//	~Shake() = default;
+//	void applyEffect(UpdateContext& context) override;
+//
+//private:
+//	static constexpr ColorF shakeBodyColor = dx2::palette::base::orange;
+//	PositionUpdater _shakeEasing = dx2::easing::Simple;
+//};
+
+
+//// 狙い撃ちする dx クラス.
+//class Shot : public EffectObject
+//{
+//public:
+//	Shot();
+//	~Shot() = default;
+//	void draw() const;
+//	void applyEffect(UpdateContext& context) override;
+//
+//private:
+//	static constexpr ColorF shotBodyColor = dx2::palette::base::lime;
+//	PositionUpdater _shotEasing = dx2::easing::ChargeShot;
+//};
+
+//// player を小さくするアイテム.
+//class Smaller : public EffectObject
+//{
+//public:
+//	Smaller();
+//	~Smaller() = default;
+//	void applyEffect(UpdateContext& context) override;
+//
+//private:
+//	static constexpr ColorF smallerBodyColor = dx2::palette::pastel::paple;
+//	PositionUpdater _smallerEasing = dx2::easing::Simple;
+//};
+
+
+//// player を大きくするアイテム.
+//class Bigger : public EffectObject
+//{
+//public:
+//	Bigger();
+//	~Bigger() = default;
+//	void applyEffect(UpdateContext& context) override;
+//
+//private:
+//	static constexpr ColorF biggerBodyColor = dx2::palette::base::yellow;
+//	PositionUpdater _biggerEasing = dx2::easing::Simple;
+//};
+
+
+//// グラフを x 軸反転させるアイテム.
+//class Flipper : public EffectObject
+//{
+//public:
+//	Flipper();
+//	~Flipper() = default;
+//	void applyEffect(UpdateContext& context) override;
+//
+//private:
+//	static constexpr ColorF flipperBodyColor = dx2::palette::base::black;
+//	PositionUpdater _flipperEasing = dx2::easing::Simple;
+//};

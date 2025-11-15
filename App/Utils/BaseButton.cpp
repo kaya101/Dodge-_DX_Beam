@@ -7,12 +7,12 @@
 BaseButton::BaseButton(const RectF& box, const ColorF& color, const ButtonType type)
 	: _color(color)
 {
-	_body.set(box, (type == ButtonType::Rect) ? 5.0: std::min(box.size.x, box.size.y) * 0.5);
+	m_body.set(box, (type == ButtonType::Rect) ? 5.0: std::min(box.size.x, box.size.y) * 0.5);
 	_soundName = dx2::music::GetSEname(dx2::music::SEname::Button);
 	_enable = true;
 }
 
-void BaseButton::Draw() const
+void BaseButton::draw() const
 {
 	constexpr double thickness = 10.0;		// 縁の厚み.
 	constexpr double frameDarkness = 0.8;	// 縁の暗さ.
@@ -23,14 +23,14 @@ void BaseButton::Draw() const
 	if (_enable)
 	{
 		color = _color;
-		if (_body.mouseOver())
+		if (m_body.mouseOver())
 		{
 			// 手の形にする.
 			Cursor::RequestStyle(CursorStyle::Hand);
 
 			// カーソルが上にあったら暗くする.
 			brightness *= 0.8;
-			if (_body.leftPressed()) brightness *= 0.8;
+			if (m_body.leftPressed()) brightness *= 0.8;
 		}
 		else
 		{
@@ -41,7 +41,7 @@ void BaseButton::Draw() const
 	{
 		color = ColorF(0.7);
 	}
-	_body.drawFrame(thickness, color * frameDarkness * brightness).draw(color * brightness);
+	m_body.drawFrame(thickness, color * frameDarkness * brightness).draw(color * brightness);
 }
 
 /*	BaseButton end		******************************************************************************************************/
@@ -58,10 +58,10 @@ TextButton::TextButton(const RectF& box, const ColorF& color, const String& text
 	_textColor = dx2::palette::TextColor(color);
 }
 
-void TextButton::Draw() const
+void TextButton::draw() const
 {
-	BaseButton::Draw();
-	FontAsset(_fontName)(_text).drawAt(TextSize(), _body.center(), _textColor);
+	BaseButton::draw();
+	FontAsset(_fontName)(_text).drawAt(TextSize(), m_body.center(), _textColor);
 }
 
 /*	TextButton end		*************************************************************************************************************/

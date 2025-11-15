@@ -1,7 +1,4 @@
 ﻿#pragma once
-//#include "../Utils/Common.h"
-//#include "../Utils/BaseButton.h"
-//#include "../Utils/dx2Library.h"
 #include "../Utils/Utils.h"
 
 // タイトルシーン.

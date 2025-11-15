@@ -14,13 +14,13 @@ GraphGlideTool::GraphGlideTool()
 	_zoomRate = 1.0;
 }
 
-void GraphGlideTool::Update(Graph* graph, GraphCamera* camera)
+void GraphGlideTool::update(Graph* graph, GraphCamera* camera)
 {
 	Slide(graph, camera);
 	Zoom(graph, camera);
 }
 
-void GraphGlideTool::Draw() const {}
+void GraphGlideTool::draw() const {}
 
 void GraphGlideTool::Slide(Graph* graph, GraphCamera* camera)
 {
@@ -100,11 +100,11 @@ void GraphGlideTool::HookWndProc()
 
 /* GraphZoomBoxTool start ************************************************************************************/
 
-void GraphZoomBoxTool::Update(Graph* graph, GraphCamera* camera)
+void GraphZoomBoxTool::update(Graph* graph, GraphCamera* camera)
 {
 }
 
-void GraphZoomBoxTool::Draw() const
+void GraphZoomBoxTool::draw() const
 {
 }
 
@@ -113,11 +113,11 @@ void GraphZoomBoxTool::Draw() const
 
 /* GraphScopeTool start ************************************************************************************/
 
-void GraphScopeTool::Update(Graph* graph, GraphCamera* camera)
+void GraphScopeTool::update(Graph* graph, GraphCamera* camera)
 {
 }
 
-void GraphScopeTool::Draw() const
+void GraphScopeTool::draw() const
 {
 }
 
@@ -126,10 +126,10 @@ void GraphScopeTool::Draw() const
 
 /* GraphRangeSelector start ************************************************************************************/
 
-void GraphRangeSelector::Update(Graph* graph, GraphCamera* camera)
+void GraphRangeSelector::update(Graph* graph, GraphCamera* camera)
 {
 }
 
-void GraphRangeSelector::Draw() const {}
+void GraphRangeSelector::draw() const {}
 
 /* GraphRangeSelector start ************************************************************************************/

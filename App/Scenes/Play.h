@@ -4,12 +4,14 @@
 #include "../Game/Graph.h"
 #include "../Game/EffectObject.h"
 
+// プレイシーン.
 class Play : public App::Scene
 {
 public:
 
 	// 全体の流れ.
-	enum class PlayScene : int32_t {
+	enum class PlayScene : int32_t
+	{
 		Start,
 		Play,
 		Result,

@@ -58,7 +58,7 @@ void Title::drawUI() const
 	font::TitleFont()(TitleText).drawAt(64, Vec2(windowWidth * 0.5, windowHeight * 0.2), dx2::palette::base::black);
 	font::TitleFont()(SubTitleText).drawAt(32, Vec2(windowWidth * 0.5, windowHeight * 0.3), dx2::palette::base::black);
 
-	for (const auto& it : _buttons) it.second.Draw();
+	for (const auto& it : _buttons) it.second.draw();
 
 	font::MainFont()(U"・負の方向へ").drawAt(26, KeyA.center() + Vec2(0, -KeyA.h), dx2::palette::base::black);
 	KeyA.rounded(5).draw(dx2::palette::pastel::blue);

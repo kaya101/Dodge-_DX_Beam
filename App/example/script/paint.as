@@ -16,7 +16,7 @@ void Main()
 	// 表示用のテクスチャ（内容を更新するので DynamicTexture）
 	DynamicTexture texture(image);
 
-	while (System::Update())
+	while (System::update())
 	{
 		if (MouseL.pressed())
 		{

@@ -41,3 +41,20 @@ static const GameData defaultGameData
 		Graph(N, dx2::math::DefaultCM)
 	)
 };
+
+
+// アイテムの移動関数.
+namespace ItemMovement
+{
+	// 等速直線運動.
+	inline static Vec2 linear(const Vec2& velocity)
+	{
+		return velocity * Scene::DeltaTime();
+	}
+
+	// うねうね.
+	inline static Vec2 wave(const Vec2& velocity)
+	{
+		return Vec2(std::cos(velocity.x), -std::sin(velocity.y)) * Scene::DeltaTime();
+	}
+}

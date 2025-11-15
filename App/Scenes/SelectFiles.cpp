@@ -95,9 +95,9 @@ void SelectFiles::drawUI() const
 {
 	font::MainFont()(SelectFilesTitle).draw(40, TitlePos, dx2::palette::base::black);
 
-	for (const auto& it : _fileButtons) it.second.Draw();
+	for (const auto& it : _fileButtons) it.second.draw();
 
-	for (const auto& it : _buttons) it.second.Draw();
+	for (const auto& it : _buttons) it.second.draw();
 
 	GraphOfFile.drawFrame(5, dx2::palette::base::black);
 	if (getData().saveData.saveDataSubDirName != U"")

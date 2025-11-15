@@ -25,7 +25,7 @@ void Main()
 	// Print a text
 	Print << "Push [A] key";
 
-	while (System::Update())
+	while (System::update())
 	{
 		// Draw a texture
 		texture.draw(200, 200);

@@ -1,104 +1,88 @@
 ﻿#include "../stdafx.h"
 #include "EffectObject.h"
+#include <utility> // std::move
 
 /*	EffectObject start		***************************************************************************************************************************/
 
-EffectObject::EffectObject(const String& name, const Size& bodySize, const double rounded, const ColorF& bodyColor, const EasingFunc easing)
-	: _name(name), _bodyColor(bodyColor), _easing(easing)
+EffectObject::EffectObject(String name, const ColorF& color, const Vec2& pos, const SizeF& size, const Vec2& velocity, const PositionUpdater positionUpdater) :
+	m_name(std::move(name)), m_color(color), m_spawnPos(pos), m_velocity(velocity), m_positionUpdater(positionUpdater)
 {
-	_textColor = dx2::palette::TextColor(bodyColor);
-	_spawnPos = SetPoint();
-	_body.set(RectF(Arg::center(_spawnPos), bodySize), rounded);
-	_vanishPos = SetPoint();
-	_timer.set(timeLimit);
-	_timer.start();
-	_active = true;
-	_consumed = false;
+	m_body.set(RectF(Arg::center(m_spawnPos), size), std::min(size.x, size.y) * 0.5);
+	m_active = true;
+	m_consumed = false;
 }
+//EffectObject::EffectObject(const String& name, const Size& bodySize, const double rounded, const ColorF& bodyColor, const PositionUpdater easing)
+//	: m_name(name), m_color(bodyColor), m_positionUpdater(easing)
+//{
+//	_textColor = dx2::palette::TextColor(bodyColor);
+//	m_spawnPos = SetPoint();
+//	m_body.set(RectF(Arg::center(m_spawnPos), bodySize), rounded);
+//	_vanishPos = SetPoint();
+//	_timer.set(timeLimit);
+//	_timer.start();
+//	m_active = true;
+//	m_consumed = false;
+//}
 
-void EffectObject::Update(UpdateContext& context)
-{
-	// 出現時間を過ぎたものを削除.
-	if (_timer.reachedZero())
-	{
-		_consumed = true;
-		return;
-	}
-	//_body = RoundRect(Arg::center(_spawnPos + _easing(_timer.sF()) * (_vanishPos - _spawnPos)), _body.w, _body.h, _body.r);
+//void EffectObject::update(UpdateContext& context)
+//{
+//	// 出現時間を過ぎたものを削除.
+//	if (_timer.reachedZero())
+//	{
+//		m_consumed = true;
+//		return;
+//	}
+//	//m_body = RoundRect(Arg::center(m_spawnPos + m_positionUpdater(_timer.sF()) * (_vanishPos - m_spawnPos)), m_body.w, m_body.h, m_body.r);
+//
+//	if (m_body.intersects(context.pPlayer.body()) && canAffect())
+//	{
+//		//getItem.play();
+//		applyEffect(context);
+//	}
+//}
 
-	if (_body.intersects(context.pPlayer.body()) && CanAffect())
-	{
-		//getItem.play();
-		ApplyEffect(context);
-	}
-}
-
-void EffectObject::Draw() const
-{
-	_body.draw(_bodyColor);
-	FontAsset(dx2::font::FontName(dx2::font::FontKey::Main))(_name).drawAt(std::min(_body.w, _body.h) * 0.8, _body.center(), _textColor);
-}
-
-Vec2 EffectObject::SetPoint() const
-{
-	Vec2 pos{};
-	// 上下.
-	if (rand() % 2 == 0) {
-		pos.x = ScreenRect.pos.x + rand() % static_cast<int32_t>(ScreenRect.w + 1);
-		pos.y = (rand() % 2 == 0) ? ScreenRect.y : ScreenRect.bottomCenter().y;
-	}
-
-	// 左右.
-	else {
-		pos.x = (rand() % 2 == 0) ? ScreenRect.x : ScreenRect.rightCenter().x;
-		pos.y = ScreenRect.pos.y + rand() % static_cast<int32_t>(ScreenRect.h + 1);
-	}
-	return pos;
-}
+//void EffectObject::draw() const
+//{
+//	m_body.draw(m_color);
+//	FontAsset(dx2::font::FontName(dx2::font::FontKey::Main))(m_name).drawAt(std::min(m_body.w, m_body.h) * 0.8, m_body.center(), _textColor);
+//}
 
 /*	EffectObject end		*************************************************************************************************************************/
 
 
-/*******		Shake start	**********************************************************************************************************************************/
+/*******		DxItem start	**********************************************************************************************************************************/
 
-Shake::Shake()
-	: EffectObject(U"dx", BodySize(), 8, shakeBodyColor, _shakeEasing) {
-}
+DxItem::DxItem(const Vec2& pos, const Vec2& velocity, const PositionUpdater positionUpdater)
+	: EffectObject(dxItemName, dxItemBodyColor, pos, dxItemBodySize, velocity, positionUpdater)
+{}
 
-void Shake::ApplyEffect(UpdateContext& context)
+void DxItem::update(UpdateContext& context)
 {
-	context.pPlayer.takeDamage();
-	context.pGraph.Differentiate().Create(
-		&context.pCamera,
-		[&](const double x)
-		{
-			return dx2::math::EvalHoner(context.pGraph.CM(), x);
-		}
-	);
-	_consumed = true;
-}
-
-/*******		Shake end	**********************************************************************************************************************************/
-
-
-/*******		Shot start	**********************************************************************************************************************************/
-
-Shot::Shot()
-	: EffectObject(U"dx", BodySize(), 8, shotBodyColor, _shotEasing) {
-}
-
-void Shot::Draw() const
-{
-	EffectObject::Draw();
-	// 進む方向を描く.
-	if (_timer.progress0_1() < 0.4)
+	// 出現時間を過ぎたものを削除.
+	/*if (_timer.reachedZero())
 	{
-		Line(_spawnPos, _vanishPos).drawArrow(4, SizeF(32, 32), dx2::palette::base::red);
+		m_consumed = true;
+		return;
+	}*/
+	//m_body = RoundRect(Arg::center(m_spawnPos + m_positionUpdater(_timer.sF()) * (_vanishPos - m_spawnPos)), m_body.w, m_body.h, m_body.r);
+	m_body.setCenter(m_body.center() + m_positionUpdater(m_velocity));
+
+	if (m_body.intersects(context.pPlayer.body()) && canAffect())
+	{
+		//getItem.play();
+		applyEffect(context);
 	}
 }
 
-void Shot::ApplyEffect(UpdateContext& context)
+void DxItem::draw() const
 {
+	m_body.draw(m_color);
+	FontAsset(dx2::font::FontName(dx2::font::FontKey::Main))(m_name).drawAt(std::min(m_body.w, m_body.h) * 0.8, m_body.center(), textColor);
+}
+
+void DxItem::applyEffect(UpdateContext& context)
+{
+	m_consumed = true;
 	context.pPlayer.takeDamage();
 	context.pGraph.Differentiate().Create(
 		&context.pCamera,
@@ -107,21 +91,44 @@ void Shot::ApplyEffect(UpdateContext& context)
 			return dx2::math::EvalHoner(context.pGraph.CM(), x);
 		}
 	);
-	_consumed = true;
 }
 
-/*******		Shot end	**********************************************************************************************************************************/
+/*******		DxItem end	**********************************************************************************************************************************/
 
 
 /*******		ExpItem	start		******************************************************************************************************************************/
 
-ExpItem::ExpItem()
-	: EffectObject(U"exp", Size(size, size), size * 0.5, expItemBodyColor, _expItemEasing) {
+ExpItem::ExpItem(const Vec2& pos, const Vec2& velocity, const PositionUpdater positionUpdater)
+	: EffectObject(expItemName, expItemBodyColor, pos, expItemBodySize, velocity, positionUpdater) {
 }
 
-void ExpItem::ApplyEffect(UpdateContext& context)
+void ExpItem::update(UpdateContext& context)
 {
-	_consumed = true;
+	// 出現時間を過ぎたものを削除.
+	/*if (_timer.reachedZero())
+	{
+		m_consumed = true;
+		return;
+	}*/
+	//m_body = RoundRect(Arg::center(m_spawnPos + m_positionUpdater(_timer.sF()) * (_vanishPos - m_spawnPos)), m_body.w, m_body.h, m_body.r);
+	m_body.setCenter(m_body.center() + m_positionUpdater(m_velocity));
+
+	if (m_body.intersects(context.pPlayer.body()) && canAffect())
+	{
+		//getItem.play();
+		applyEffect(context);
+	}
+}
+
+void ExpItem::draw() const
+{
+	m_body.draw(m_color);
+	FontAsset(dx2::font::FontName(dx2::font::FontKey::Main))(m_name).drawAt(std::min(m_body.w, m_body.h) * 0.8, m_body.center(), textColor);
+}
+
+void ExpItem::applyEffect(UpdateContext& context)
+{
+	m_consumed = true;
 	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Exp));
 	context.pGraph.Create(&context.pCamera,
 		[](const double x)
@@ -134,66 +141,39 @@ void ExpItem::ApplyEffect(UpdateContext& context)
 /*******		Exp	end		**********************************************************************************************************************************/
 
 
-/*******		Smaller start	******************************************************************************************************************************/
-
-Smaller::Smaller()
-	: EffectObject(U"S", Size(size, size), size * 0.5, smallerBodyColor, _smallerEasing) {
-}
-
-void Smaller::ApplyEffect(UpdateContext& context)
-{
-	_consumed = true;
-	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Smaller));
-}
-
-/*******		Smaller	end		******************************************************************************************************************************/
-
-
-/*******		Bigger start	******************************************************************************************************************************/
-
-Bigger::Bigger()
-	: EffectObject(U"B", Size(size, size), size * 0.5, biggerBodyColor, _biggerEasing) {
-}
-
-void Bigger::ApplyEffect(UpdateContext& context)
-{
-	_consumed = true;
-	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Bigger));
-}
-
-/*******		Bigger end		******************************************************************************************************************************/
-
-
-/*******		Flipper	start	******************************************************************************************************************************/
-
-Flipper::Flipper()
-	: EffectObject(U"-X", Size(size, size), size * 0.5, flipperBodyColor, _flipperEasing) {
-}
-
-void Flipper::ApplyEffect(UpdateContext& context)
-{
-	_consumed = true;
-	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Flipper));
-	context.pGraph.Create(&context.pCamera,
-		[&](const double x)
-		{
-			return dx2::math::EvalHoner(context.pGraph.CM(), -x);
-		}
-	);
-}
-
-/*******		Flipper	end		******************************************************************************************************************************/
-
-
 /*******		Integral start	******************************************************************************************************************************/
 
-Integraler::Integraler()
-	: EffectObject(U"∫", Size(size, size), size * 0.5, integralerBodyColor, _integralerEasing) {
+Integraler::Integraler(const Vec2& pos, const Vec2& velocity, const PositionUpdater positionUpdater)
+	: EffectObject(integralerName, dx2::palette::base::deepBlue, pos, integralerBodySize, velocity, positionUpdater) {
 }
 
-void Integraler::ApplyEffect(UpdateContext& context)
+void Integraler::update(UpdateContext& context)
 {
-	_consumed = true;
+	// 出現時間を過ぎたものを削除.
+	/*if (_timer.reachedZero())
+	{
+		m_consumed = true;
+		return;
+	}*/
+	//m_body = RoundRect(Arg::center(m_spawnPos + m_positionUpdater(_timer.sF()) * (_vanishPos - m_spawnPos)), m_body.w, m_body.h, m_body.r);
+	m_body.setCenter(m_body.center() + m_positionUpdater(m_velocity));
+
+	if (m_body.intersects(context.pPlayer.body()) && canAffect())
+	{
+		//getItem.play();
+		applyEffect(context);
+	}
+}
+
+void Integraler::draw() const
+{
+	m_body.draw(m_color);
+	FontAsset(dx2::font::FontName(dx2::font::FontKey::Main))(m_name).drawAt(std::min(m_body.w, m_body.h) * 0.8, m_body.center(), textColor);
+}
+
+void Integraler::applyEffect(UpdateContext& context)
+{
+	m_consumed = true;
 	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Integraler));
 	context.pGraph.Integrate().Create(
 		&context.pCamera,
@@ -205,3 +185,108 @@ void Integraler::ApplyEffect(UpdateContext& context)
 }
 
 /*******		Integral end		******************************************************************************************************************************/
+
+
+/*******		Shake start	**********************************************************************************************************************************/
+
+//Shake::Shake()
+//	: EffectObject(U"dx", BodySize(), 8, shakeBodyColor, _shakeEasing) {
+//}
+//
+//void Shake::applyEffect(UpdateContext& context)
+//{
+//	context.pPlayer.takeDamage();
+//	context.pGraph.Differentiate().Create(
+//		&context.pCamera,
+//		[&](const double x)
+//		{
+//			return dx2::math::EvalHoner(context.pGraph.CM(), x);
+//		}
+//	);
+//	m_consumed = true;
+//}
+
+/*******		Shake end	**********************************************************************************************************************************/
+
+
+/*******		Shot start	**********************************************************************************************************************************/
+
+//Shot::Shot()
+//	: EffectObject(U"dx", BodySize(), 8, shotBodyColor, _shotEasing) {
+//}
+//
+//void Shot::draw() const
+//{
+//	EffectObject::draw();
+//	// 進む方向を描く.
+//	if (_timer.progress0_1() < 0.4)
+//	{
+//		Line(m_spawnPos, _vanishPos).drawArrow(4, SizeF(32, 32), dx2::palette::base::red);
+//	}
+//}
+//
+//void Shot::applyEffect(UpdateContext& context)
+//{
+//	context.pPlayer.takeDamage();
+//	context.pGraph.Differentiate().Create(
+//		&context.pCamera,
+//		[&](const double x)
+//		{
+//			return dx2::math::EvalHoner(context.pGraph.CM(), x);
+//		}
+//	);
+//	m_consumed = true;
+//}
+
+/*******		Shot end	**********************************************************************************************************************************/
+
+
+/*******		Smaller start	******************************************************************************************************************************/
+
+//Smaller::Smaller()
+//	: EffectObject(U"S", Size(size, size), size * 0.5, smallerBodyColor, _smallerEasing) {
+//}
+//
+//void Smaller::applyEffect(UpdateContext& context)
+//{
+//	m_consumed = true;
+//	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Smaller));
+//}
+
+/*******		Smaller	end		******************************************************************************************************************************/
+
+
+/*******		Bigger start	******************************************************************************************************************************/
+
+//Bigger::Bigger()
+//	: EffectObject(U"B", Size(size, size), size * 0.5, biggerBodyColor, _biggerEasing) {
+//}
+//
+//void Bigger::applyEffect(UpdateContext& context)
+//{
+//	m_consumed = true;
+//	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Bigger));
+//}
+
+/*******		Bigger end		******************************************************************************************************************************/
+
+
+/*******		Flipper	start	******************************************************************************************************************************/
+
+//Flipper::Flipper()
+//	: EffectObject(U"-X", Size(size, size), size * 0.5, flipperBodyColor, _flipperEasing) {
+//}
+//
+//void Flipper::applyEffect(UpdateContext& context)
+//{
+//	m_consumed = true;
+//	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Flipper));
+//	context.pGraph.Create(&context.pCamera,
+//		[&](const double x)
+//		{
+//			return dx2::math::EvalHoner(context.pGraph.CM(), -x);
+//		}
+//	);
+//}
+
+/*******		Flipper	end		******************************************************************************************************************************/
