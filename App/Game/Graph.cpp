@@ -7,9 +7,9 @@
 void GraphCamera::Slide(const Vec2& screenVel, const SampleCount numSamples)
 {
 	Vec2 logicDelta = ToLogicDelta(screenVel, numSamples);
-	_logicCameraPos -= logicDelta;
-	_logicCameraRange.min -= logicDelta;
-	_logicCameraRange.max -= logicDelta;
+	m_logicCameraPos -= logicDelta;
+	m_logicCameraRange.min -= logicDelta;
+	m_logicCameraRange.max -= logicDelta;
 }
 
 void GraphCamera::Zoom(const double zoomRate, const SampleCount numSamples)
@@ -17,30 +17,30 @@ void GraphCamera::Zoom(const double zoomRate, const SampleCount numSamples)
 	//Print << zoomRate;// 拡大するときに > 1.0 となる.
 	const Vec2 screenFocusPos = Cursor::PosF();							// カーソルのスクリーン座標を取得.
 	const Vec2 logicBeforePos = ToLogicPos(screenFocusPos, numSamples);	// 変更前のカーソルの論理座標を取得.
-	_logicCameraRange = ZoomLogicRange(_logicCameraRange, zoomRate);	// 全体を拡大・縮小する.
+	m_logicCameraRange = zoomLogicRange(m_logicCameraRange, zoomRate);	// 全体を拡大・縮小する.
 	const Vec2 logicAfterPos = ToLogicPos(screenFocusPos, numSamples);	// 変更後のカーソルの論理座標を取得.
 	const Vec2 logicDelta = logicAfterPos - logicBeforePos;				// 論理座標でのカーソルの移動量を取得.
-	_logicCameraPos -= logicDelta;										// カーソルの移動量だけ平行移動.
-	_logicCameraRange.min -= logicDelta;								// 上と同じ.
-	_logicCameraRange.max -= logicDelta;								// 上と同じ.
+	m_logicCameraPos -= logicDelta;										// カーソルの移動量だけ平行移動.
+	m_logicCameraRange.min -= logicDelta;								// 上と同じ.
+	m_logicCameraRange.max -= logicDelta;								// 上と同じ.
 }
 
 Vec2 GraphCamera::ToScreenPos(const Vec2& logicPos, const SampleCount numSamples) const
 {
-	return _screenCameraPos + NegateY(logicPos - _logicCameraPos) * Scale(numSamples);
+	return m_screenCameraPos + negateY(logicPos - m_logicCameraPos) * scale(numSamples);
 }
 
 Vec2 GraphCamera::ToLogicPos(const Vec2& screenPos, const SampleCount numSamples) const
 {
-	return _logicCameraPos + NegateY(screenPos - _screenCameraPos) / Scale(numSamples);
+	return m_logicCameraPos + negateY(screenPos - m_screenCameraPos) / scale(numSamples);
 }
 
 Vec2 GraphCamera::ToLogicDelta(const Vec2& screenDelta, const SampleCount numSamples) const
 {
-	return NegateY(screenDelta) / Scale(numSamples);
+	return negateY(screenDelta) / scale(numSamples);
 }
 
-LogicRange GraphCamera::ZoomLogicRange(const LogicRange& logicRange, const double rate) const
+LogicRange GraphCamera::zoomLogicRange(const LogicRange& logicRange, const double rate) const
 {
 	// 全体を均一に拡大・縮小する.
 	LogicRange lr{};
@@ -71,7 +71,7 @@ void Graph::Create(const GraphCamera* camera, const Function func)
 	m_values.resize(m_numSamples + 1);
 	for (size_t i = 0; i < static_cast<int32_t>(m_values.size()); ++i)
 	{
-		m_values[i].x = (camera->Min().x + camera->step(m_numSamples).x * i);
+		m_values[i].x = (camera->min().x + camera->step(m_numSamples).x * i);
 		m_values[i].y = func(m_values[i].x);
 	}
 	m_curve = ToFunctioncurve(camera, m_values, m_numSamples);
@@ -89,7 +89,7 @@ Graph::Functioncurve Graph::ToFunctioncurve(const GraphCamera* camera, std::vect
 	for (size_t i = 0; i < static_cast<int32_t>(ls.size()); ++i)
 	{
 		// 論理座標で範囲外の物を生成しない.
-		if (values[i].y < camera->Min().y || values[i].y > camera->Max().y)
+		if (values[i].y < camera->min().y || values[i].y > camera->max().y)
 		{
 			ls[i] = Vec2(0.0, 0.0);// 範囲外に設定.
 		}

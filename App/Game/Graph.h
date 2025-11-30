@@ -32,12 +32,12 @@ class GraphCamera
 public:
 	constexpr GraphCamera() = default;
 	constexpr GraphCamera(const Vec2& logicCameraPos, const LogicRange& logicCameraRange, const Vec2& screenCameraPos, const SizeF& screenCameraSize)
-		: _logicCameraPos(logicCameraPos), _logicCameraRange(logicCameraRange), _screenCameraPos(screenCameraPos), _screenCameraSize(screenCameraPos) {
+		: m_logicCameraPos(logicCameraPos), m_logicCameraRange(logicCameraRange), m_screenCameraPos(screenCameraPos), m_screenCameraSize(screenCameraPos) {
 	}
 	constexpr ~GraphCamera() = default;
 
 	// カメラのサイズ.
-	constexpr RectF ScreenBox() const { return RectF(Arg::center(_screenCameraPos), _screenCameraSize); }
+	constexpr RectF ScreenBox() const { return RectF(Arg::center(m_screenCameraPos), m_screenCameraSize); }
 
 	// カメラの平行移動.
 	void Slide(const Vec2& screenVel, const SampleCount numSamples);
@@ -55,35 +55,35 @@ public:
 	Vec2 ToLogicDelta(const Vec2& screenDelta, const SampleCount numSamples) const;
 
 	// セッター.
-	GraphCamera& SetScreenCameraPos(const Vec2& screenCameraPos) { _screenCameraPos = screenCameraPos; return *this; }
-	GraphCamera& SetScreenCameraSize(const SizeF& screenCameraSize) { _screenCameraSize = screenCameraSize; return *this; }
+	GraphCamera& SetScreenCameraPos(const Vec2& screenCameraPos) { m_screenCameraPos = screenCameraPos; return *this; }
+	GraphCamera& SetScreenCameraSize(const SizeF& screenCameraSize) { m_screenCameraSize = screenCameraSize; return *this; }
 
 	// ゲッター.
-	const Vec2& Min() const { return _logicCameraRange.min; }
-	const Vec2& Max() const { return _logicCameraRange.max; }
-	const Vec2& step(const SampleCount numSamples) const { return _logicCameraRange.step(numSamples); }
+	const Vec2& min() const { return m_logicCameraRange.min; }
+	const Vec2& max() const { return m_logicCameraRange.max; }
+	const Vec2& step(const SampleCount numSamples) const { return m_logicCameraRange.step(numSamples); }
 
 	// シリアライズに対応させるためのメンバ関数.
 	template <class Archive>
 	void SIV3D_SERIALIZE(Archive& archive)
 	{
-		archive(_logicCameraPos, _logicCameraRange, _screenCameraPos, _screenCameraSize);
+		archive(m_logicCameraPos, m_logicCameraRange, m_screenCameraPos, m_screenCameraSize);
 	}
 
 private:
-	Vec2 _logicCameraPos;			// カメラの今いる論理座標.
-	LogicRange _logicCameraRange;	// カメラで切り取る論理座標の範囲.
-	Vec2 _screenCameraPos;			// カメラの今いるスクリーン座標.
-	SizeF _screenCameraSize;		// カメラの画面の大きさ.
+	Vec2 m_logicCameraPos;			// カメラの今いる論理座標.
+	LogicRange m_logicCameraRange;	// カメラで切り取る論理座標の範囲.
+	Vec2 m_screenCameraPos;			// カメラの今いるスクリーン座標.
+	SizeF m_screenCameraSize;		// カメラの画面の大きさ.
 
 	// y 成分だけ -1 倍する. スクリーンの座標が左上基準な為に, y 座標の増減が逆になっちゃう.
-	constexpr Vec2 NegateY(const Vec2& v) const { return Vec2(v.x, -v.y); }
+	constexpr Vec2 negateY(const Vec2& v) const { return Vec2(v.x, -v.y); }
 
 	// カメラの倍率.
-	constexpr Vec2 Scale(const SampleCount numSamples) const { return Vec2(1.0, 1.0) / _logicCameraRange.step(numSamples); }
+	constexpr Vec2 scale(const SampleCount numSamples) const { return Vec2(1.0, 1.0) / m_logicCameraRange.step(numSamples); }
 
 	// ズーム倍率の変更に合わせて, グラフの論理座標範囲を変更する.
-	LogicRange ZoomLogicRange(const LogicRange& range, const double rate) const;
+	LogicRange zoomLogicRange(const LogicRange& range, const double rate) const;
 };
 
 
