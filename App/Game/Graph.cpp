@@ -71,7 +71,7 @@ void Graph::Create(const GraphCamera* camera, const Function func)
 	m_values.resize(m_numSamples + 1);
 	for (size_t i = 0; i < static_cast<int32_t>(m_values.size()); ++i)
 	{
-		m_values[i].x = (camera->Min().x + camera->Step(m_numSamples).x * i);
+		m_values[i].x = (camera->Min().x + camera->step(m_numSamples).x * i);
 		m_values[i].y = func(m_values[i].x);
 	}
 	m_curve = ToFunctioncurve(camera, m_values, m_numSamples);

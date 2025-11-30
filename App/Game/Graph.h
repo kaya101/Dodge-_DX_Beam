@@ -12,7 +12,7 @@ public:
 	constexpr ~LogicRange() = default;
 
 	// 隣のサンプリング論理座標までの距離.
-	constexpr Vec2 Step(const SampleCount numSamples) const { return (max - min) / numSamples; }
+	constexpr Vec2 step(const SampleCount numSamples) const { return (max - min) / numSamples; }
 
 	// シリアライズに対応させるためのメンバ関数.
 	template <class Archive>
@@ -61,7 +61,7 @@ public:
 	// ゲッター.
 	const Vec2& Min() const { return _logicCameraRange.min; }
 	const Vec2& Max() const { return _logicCameraRange.max; }
-	const Vec2& Step(const SampleCount numSamples) const { return _logicCameraRange.Step(numSamples); }
+	const Vec2& step(const SampleCount numSamples) const { return _logicCameraRange.step(numSamples); }
 
 	// シリアライズに対応させるためのメンバ関数.
 	template <class Archive>
@@ -80,7 +80,7 @@ private:
 	constexpr Vec2 NegateY(const Vec2& v) const { return Vec2(v.x, -v.y); }
 
 	// カメラの倍率.
-	constexpr Vec2 Scale(const SampleCount numSamples) const { return Vec2(1.0, 1.0) / _logicCameraRange.Step(numSamples); }
+	constexpr Vec2 Scale(const SampleCount numSamples) const { return Vec2(1.0, 1.0) / _logicCameraRange.step(numSamples); }
 
 	// ズーム倍率の変更に合わせて, グラフの論理座標範囲を変更する.
 	LogicRange ZoomLogicRange(const LogicRange& range, const double rate) const;
