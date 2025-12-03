@@ -1,46 +1,45 @@
 ﻿#pragma once
-#define _WIN32_WINNT 0x0601	// Windows 7 以降の API を使う.
-#include <Windows.h>		// API 用.
-#include "../Game/Graph.h"
+#include "Graph.h"
 
 // グラフの編集操作のインターフェース.
 class IGraphTool
 {
 public:
-	virtual ~IGraphTool() = default;
 	virtual void update(Graph* graph, GraphCamera* camera) = 0;
 	virtual void draw() const = 0;
 };
 
 // 掴んで滑らかに移動（パン操作）.
-static WNDPROC g_originalWndProc = nullptr;
 class GraphGlideTool : public IGraphTool
 {
 public:
-	GraphGlideTool();
+	explicit GraphGlideTool();
 	~GraphGlideTool() = default;
 	void update(Graph* graph, GraphCamera* camera) override;
 	void draw() const override;
 
 private:
-	Vec2 _screenVel;									// スクリーン画面の移動速度.
-	bool _isZoomed;										// Zoom操作をしているか.
-	double _zoomRate;									// カメラの倍率.
-	static constexpr double _decelerate = 0.95;			// 減速.
-	static constexpr double _WheelZoomDivisor = 1200.0;	// ホイールズームの感度.
-	static GraphGlideTool* s_instance;					// 自分自身を指すポインタ.
+	Vec2 m_screenVel;									// スクリーン画面の移動速度.
+
+	static constexpr double m_decelerate = 0.98;			// 減速.
 
 	// 平行移動.
-	void Slide(Graph* graph, GraphCamera* camera);
+	bool m_isSliding = false;
+	static constexpr double m_doubleTapThreshold = 0.3; // ダブルタップ閾値（秒）.
+	void slide(Graph* graph, GraphCamera* camera);
+
+	// ダブルタップを検知する関数.
+	bool m_isPressing = false;
+	Stopwatch m_clickTimer{ StartImmediately::Yes };
+	bool detectDoubleTap();
 
 	// 倍率操作.
-	void Zoom(Graph* graph, GraphCamera* camera);
+	bool m_isZoomed;								// Zoom操作をしているか.
+	double m_zoomRate;								// カメラの倍率.
+	void zoom(Graph* graph, GraphCamera* camera);	// そのメソッド.
 
-	// 自分の WndProc.
-	static LRESULT CALLBACK MyWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-	// ウィンドウプロシージャの差し替え.
-	void HookWndProc();
+	// 倍率計算.
+	const double calcZoomRate() const { return 1.0 - (Mouse::Wheel() / 10); }
 };
 
 
@@ -48,7 +47,7 @@ private:
 class GraphZoomBoxTool : public IGraphTool
 {
 public:
-	GraphZoomBoxTool() = default;
+	explicit GraphZoomBoxTool() = default;
 	~GraphZoomBoxTool() = default;
 	void update(Graph* graph, GraphCamera* camera) override;
 	void draw() const override;
@@ -58,7 +57,7 @@ public:
 class GraphScopeTool : public IGraphTool
 {
 public:
-	GraphScopeTool() = default;
+	explicit GraphScopeTool() = default;
 	~GraphScopeTool() = default;
 	void update(Graph* graph, GraphCamera* camera) override;
 	void draw() const override;
@@ -68,7 +67,7 @@ public:
 class GraphRangeSelector : public IGraphTool
 {
 public:
-	GraphRangeSelector() = default;
+	explicit GraphRangeSelector() = default;
 	~GraphRangeSelector() = default;
 	void update(Graph* graph, GraphCamera* camera) override;
 	void draw() const override;

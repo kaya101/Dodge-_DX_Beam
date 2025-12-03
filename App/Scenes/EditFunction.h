@@ -2,7 +2,7 @@
 #include "../Utils/Common.h"
 #include "../Utils/BaseButton.h"
 #include "../Game/Graph.h"
-#include "../Utils/IGraphTool.h"
+#include "../Game/IGraphTool.h"
 
 // 関数を編集するシーン.
 class EditFunction : public App::Scene

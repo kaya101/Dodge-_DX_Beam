@@ -60,7 +60,7 @@ void Play::update()
 			//createItems(ItemType::Flipper);
 
 			// グラフを計算する.
-			//pGraph->Create(pCamera.get(), [&](const double x) { return dx2::math::EvalHoner(pGraph->cm(), x); });
+			//pGraph->create(pCamera.get(), [&](const double x) { return dx2::math::EvalHoner(pGraph->cm(), x); });
 		}
 
 		break;
@@ -234,7 +234,7 @@ void Play::drawBackGround() const
 	font::MainFont()(U"O").drawAt(22, ScreenRect.center() + Vec2{ -16, 16 }, dx2::palette::base::black);
 
 	// 平面の格子線.
-	//player->graph().gs().drawGrid(ScreenRect, player->graph().pa(), player->graph().numSamples());
+	//player->graph().gs().drawGrid(ScreenRect, player->graph().pa(), player->graph().samples());
 }
 
 // UI を描く関数.

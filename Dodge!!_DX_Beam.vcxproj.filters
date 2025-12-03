@@ -162,7 +162,7 @@
     <ClCompile Include="App\Utils\Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="App\Utils\IGraphTool.cpp">
+    <ClCompile Include="App\Game\IGraphTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="App\Game\EffectObject.cpp">
@@ -867,7 +867,7 @@
     <ClInclude Include="App\Utils\Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="App\Utils\IGraphTool.h">
+    <ClInclude Include="App\Game\IGraphTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="App\Game\EffectObject.h">

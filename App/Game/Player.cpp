@@ -36,7 +36,7 @@ void Player::update(Graph* pGraph, const GraphCamera* pCamera)
 	if (_expTimer.reachedZero()) {
 		_expTimer.reset();
 		_invincible = false;
-		pGraph->Create(pCamera, [&](const double x) { return dx2::math::EvalHoner(pGraph->cm(), x); });
+		pGraph->create(pCamera, [&](const double x) { return dx2::math::EvalHoner(pGraph->cm(), x); });
 		//createGraph(&_camera, [&](const double x) { return dx2::math::EvalHoner(_graph.cm(), x); });
 	}
 
@@ -51,7 +51,7 @@ void Player::update(Graph* pGraph, const GraphCamera* pCamera)
 
 	if (interval < accumlatedTime) {
 		_pos += (_buttons[PlayerAction::Right] - _buttons[PlayerAction::Left]) * 6;
-		_pos = (_pos < 0) ? 0 : (_pos > pGraph->numSamples() - 1) ? pGraph->numSamples() - 1 : _pos;
+		_pos = (_pos < 0) ? 0 : (_pos > pGraph->samples() - 1) ? pGraph->samples() - 1 : _pos;
 		accumlatedTime = 0.0000000000;
 	}
 

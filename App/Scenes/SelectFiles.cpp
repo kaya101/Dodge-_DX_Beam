@@ -46,7 +46,7 @@ void SelectFiles::update()
 
 		//	// グラフを生成する.
 		//	getData().Adjust(GraphOfFile);
-		//	getData().saveData.graph.Create(&getData().saveData.camera,
+		//	getData().saveData.graph.create(&getData().saveData.camera,
 		//		[&](const double x)
 		//		{
 		//			return dx2::math::EvalHoner(getData().saveData.graph.cm(), x);

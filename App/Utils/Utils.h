@@ -1,4 +1,3 @@
 ﻿#pragma once
 #include "BaseButton.h"
 #include "Common.h"
-#include "IGraphTool.h"

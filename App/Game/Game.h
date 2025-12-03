@@ -3,3 +3,4 @@
 #include "EffectObject.h"
 #include "Player.h"
 #include "SaveDataManager.h"
+#include "IGraphTool.h"

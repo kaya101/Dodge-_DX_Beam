@@ -130,7 +130,7 @@
     </ClCompile>
     <ClCompile Include="App\Utils\BaseButton.cpp" />
     <ClCompile Include="App\Utils\Common.cpp" />
-    <ClCompile Include="App\Utils\IGraphTool.cpp" />
+    <ClCompile Include="App\Game\IGraphTool.cpp" />
     <ClCompile Include="App\Utils\Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -355,7 +355,7 @@
     <ClInclude Include="App\stdafx.h" />
     <ClInclude Include="App\Utils\BaseButton.h" />
     <ClInclude Include="App\Utils\Common.h" />
-    <ClInclude Include="App\Utils\IGraphTool.h" />
+    <ClInclude Include="App\Game\IGraphTool.h" />
     <ClInclude Include="App\Utils\Utils.h" />
     <ClInclude Include="App\Utils\Collider.h" />
   </ItemGroup>

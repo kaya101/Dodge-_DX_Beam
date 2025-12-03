@@ -49,7 +49,7 @@ void DxItem::applyEffect(UpdateContext& context)
 {
 	m_consumed = true;
 	context.pPlayer.takeDamage();
-	/*context.pGraph.Differentiate().Create(
+	/*context.pGraph.Differentiate().create(
 		&context.pCamera,
 		[&](const double x)
 		{
@@ -95,7 +95,7 @@ void ExpItem::applyEffect(UpdateContext& context)
 {
 	m_consumed = true;
 	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Exp));
-	/*context.pGraph.Create(&context.pCamera,
+	/*context.pGraph.create(&context.pCamera,
 		[](const double x)
 		{
 			return std::exp(x);
@@ -140,7 +140,7 @@ void Integraler::applyEffect(UpdateContext& context)
 {
 	m_consumed = true;
 	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Integraler));
-	/*context.pGraph.Integrate().Create(
+	/*context.pGraph.Integrate().create(
 		&context.pCamera,
 		[&](const double x)
 		{
@@ -192,7 +192,7 @@ void Integraler::applyEffect(UpdateContext& context)
 //{
 //	m_consumed = true;
 //	context.pPlayer.pickupItem(static_cast<int32_t>(ItemType::Flipper));
-//	context.pGraph.Create(&context.pCamera,
+//	context.pGraph.create(&context.pCamera,
 //		[&](const double x)
 //		{
 //			return dx2::math::EvalHoner(context.pGraph.cm(), -x);
