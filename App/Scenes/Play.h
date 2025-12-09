@@ -17,7 +17,7 @@ public:
 		Result,
 	};
 
-	Play(const InitData& init);
+	explicit Play(const InitData& init);
 	void update() override;
 	void draw() const override;
 	void drawFadeIn(double t) const override;

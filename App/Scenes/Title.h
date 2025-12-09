@@ -5,7 +5,7 @@
 class Title : public App::Scene
 {
 public:
-	Title(const InitData& init);
+	explicit Title(const InitData& init);
 	void update() override;
 	void draw() const override;
 	void drawFadeIn(double t) const override;
@@ -16,7 +16,7 @@ private:
 	const AudioAsset bgm{ dx2::music::GetBGMname(dx2::music::BGMname::Title)};
 
 	// title, subTitle.
-	const String TitleText = U"避けろ!! dxビーム２";
+	const String TitleText = U"避けろ!! dxビーム";
 	const String SubTitleText = U"-- Click the Button to Play --";
 
 	// Start, Quit ボタン.

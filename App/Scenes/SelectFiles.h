@@ -6,7 +6,7 @@
 class SelectFiles : public App::Scene
 {
 public:
-	SelectFiles(const InitData& init);
+	explicit SelectFiles(const InitData& init);
 	void update() override;
 	void draw() const override;
 	void drawFadeIn(double t) const override;

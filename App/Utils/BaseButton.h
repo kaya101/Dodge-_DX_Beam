@@ -5,7 +5,7 @@ class BaseButton
 {
 public:
 	enum class ButtonType : int8_t { Rect, Circle };// 四角形と円.
-	BaseButton() = default;
+	explicit BaseButton() = default;
 	BaseButton(const RectF& box, const ColorF& color, const ButtonType type = ButtonType::Rect);
 	virtual void draw() const;
 	void DisableButtonIfUnavailable() { _enable = false; }
@@ -28,7 +28,7 @@ protected:
 class TextButton : public BaseButton
 {
 public:
-	TextButton() = default;
+	explicit TextButton() = default;
 	TextButton(const RectF& box, const ColorF& color, const String& text, const ButtonType type = ButtonType::Rect);
 	void draw() const override;
 	const String& Text() const { return _text; }

@@ -1,6 +1,6 @@
 ﻿#include "../stdafx.h"
 #include "BaseButton.h"
-#include "dx2Library.h"
+#include "Common.h"
 
 /*	BaseButton start		**************************************************************************************************/
 

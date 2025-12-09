@@ -18,20 +18,20 @@ void EditFunction::update()
 	// 決定ボタン.
 	if (_buttons.at(ButtonKey::Decide).IsReleased())
 	{
-		SaveDataManager().Store(getData());
+		SaveDataManager().store(getData());
 		changeScene(State::SelectFiles, 1.0s);
 	}
 
 	// リセットボタン.
 	if (_buttons.at(ButtonKey::Reset).IsReleased())
 	{
-		SaveDataManager().Load(getData());
+		SaveDataManager().load(getData());
 	}
 
 	// 戻るボタン.
 	if (_buttons.at(ButtonKey::Return).IsReleased())
 	{
-		SaveDataManager().Load(getData());
+		SaveDataManager().load(getData());
 		changeScene(State::SelectFiles, 1.0s);
 	}
 }

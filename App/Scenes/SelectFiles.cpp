@@ -15,7 +15,7 @@ SelectFiles::SelectFiles(const InitData& init)
 	//	// 初期セーブデータを 3 ファイル分だけ生成する.
 	//	for (size_t i = 0; i < static_cast<size_t>(SaveDataManager().SubDirNames().size()); ++i)
 	//	{
-	//		SaveDataManager().Store(
+	//		SaveDataManager().store(
 	//			GameData
 	//			{
 	//				0.0,
@@ -41,7 +41,7 @@ void SelectFiles::update()
 		//	getData().saveData.saveDataSubDirName = it;
 
 		//	// 子ディレクトリの名前からそのデータを読み込む.
-		//	SaveDataManager().Load(getData());
+		//	SaveDataManager().load(getData());
 		//	getData().saveData.saveDataSubDirName = it;
 
 		//	// グラフを生成する.

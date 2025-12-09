@@ -8,7 +8,7 @@
 class EditFunction : public App::Scene
 {
 public:
-	EditFunction(const InitData& init);
+	explicit EditFunction(const InitData& init);
 	void update() override;
 	void draw() const override;
 	void drawFadeIn(double t) const override;

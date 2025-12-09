@@ -21,7 +21,7 @@ SaveData& SaveData::operator=(const SaveData& other)
 
 /*		SaveDataWriter start		*********************************************************************************************************/
 
-void SaveDataWriter::Store(const SaveData& sd, const FilePath& subDirPath) const
+void SaveDataWriter::store(const SaveData& sd, const FilePath& subDirPath) const
 {
 	const FilePath savePath = FileSystem::PathAppend(subDirPath, SaveDataFileName());
 	FileSystem::CreateDirectories(FileSystem::ParentPath(savePath));
@@ -40,7 +40,7 @@ String SaveDataWriter::SaveDataFileName() const
 
 /*		SaveDataLoader start		*********************************************************************************************************/
 
-void SaveDataLoader::Load(SaveData& sd, const FilePath& subDirPath) const
+void SaveDataLoader::load(SaveData& sd, const FilePath& subDirPath) const
 {
 	const FilePath savePath = FindSaveDataFilePath(subDirPath);
 	Deserializer<BinaryReader> reader{ savePath };
@@ -83,14 +83,14 @@ bool SaveDataLoader::IsBinFile(const FilePath& path)
 
 /*		SaveDataManager start		*********************************************************************************************************/
 
-void SaveDataManager::Load(GameData& gd) const
+void SaveDataManager::load(GameData& gd) const
 {
-	//SaveDataLoader::Load(gd.saveData, FileSystem::PathAppend(_rootDirName, gd.saveData.saveDataSubDirName));
+	//SaveDataLoader::load(gd.saveData, FileSystem::PathAppend(m_RootDirName, gd.saveData.saveDataSubDirName));
 }
 
-void SaveDataManager::Store(const GameData& gd) const
+void SaveDataManager::store(const GameData& gd) const
 {
-	//SaveDataWriter::Store(gd.saveData, FileSystem::PathAppend(_rootDirName, gd.saveData.saveDataSubDirName));
+	//SaveDataWriter::store(gd.saveData, FileSystem::PathAppend(m_RootDirName, gd.saveData.saveDataSubDirName));
 }
 
 /*		SaveDataManager end			*********************************************************************************************************/

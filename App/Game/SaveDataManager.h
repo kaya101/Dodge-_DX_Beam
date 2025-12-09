@@ -6,8 +6,8 @@
 class SaveData
 {
 public:
-	SaveData() = default;
-	SaveData(const String& saveDataSubDirName, const GraphCamera& camera, const Graph& graph);
+	explicit SaveData() = default;
+	explicit SaveData(const String& saveDataSubDirName, const GraphCamera& camera, const Graph& graph);
 	~SaveData() = default;
 
 	// 代入演算子.
@@ -30,9 +30,9 @@ public:
 class SaveDataWriter
 {
 public:
-	constexpr SaveDataWriter() = default;
+	explicit constexpr SaveDataWriter() = default;
 	constexpr ~SaveDataWriter() = default;
-	void Store(const SaveData& sd, const FilePath& subDirPath) const;
+	void store(const SaveData& sd, const FilePath& subDirPath) const;
 
 private:
 	String SaveDataFileName() const;
@@ -43,9 +43,9 @@ private:
 class SaveDataLoader
 {
 public:
-	constexpr SaveDataLoader() = default;
+	explicit constexpr SaveDataLoader() = default;
 	constexpr ~SaveDataLoader() = default;
-	void Load(SaveData& sd, const FilePath& subDirPath) const;
+	void load(SaveData& sd, const FilePath& subDirPath) const;
 
 private:
 	FilePath FindSaveDataFilePath(const FilePath& subDirPath) const;
@@ -54,18 +54,20 @@ private:
 
 
 // セーブデータを管理するクラス.
+using FileName = String;
 class GameData;
 class SaveDataManager : public SaveDataWriter, public SaveDataLoader
 {
 public:
-	constexpr SaveDataManager() = default;
+	explicit constexpr SaveDataManager() = default;
 	constexpr ~SaveDataManager() = default;
-	void Load(GameData& gd) const;
-	void Store(const GameData& gd) const;
-	String RootDirName() const { return _rootDirName; }
-	std::vector<String> SubDirNames() const { return _subDirNames; }
+	void load(GameData& gd) const;
+	void store(const GameData& gd) const;
+	String RootDirName() const { return m_RootDirName; }
+	std::vector<String> SubDirNames() const { return m_SubDirNames; }
 
 private:
-	const String _rootDirName = U"UserData";
-	const std::vector<String> _subDirNames = { U"File1", U"File2", U"File3" };
+	const String m_RootDirName = U"UserData";
+	const std::vector<String> m_SubDirNames = { U"File1", U"File2", U"File3" };
+	static const std::map<String, SaveData> m_datas;
 };
